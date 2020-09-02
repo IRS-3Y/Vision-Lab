@@ -20,6 +20,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MessageSnackbar from './components/core/MessageSnackbar';
 import AppService, {messageQueue} from './services/AppService';
+import FakeImageDetector from './views/FakeImageDetector';
 
 const app = new AppService();
 //check app status
@@ -195,7 +196,7 @@ export default function App() {
           <div className={classes.drawerHeader} />
           <Switch>
             <Route path="/">
-              <div/>
+              <FakeImageDetector/>
             </Route>
           </Switch>
         </main>
