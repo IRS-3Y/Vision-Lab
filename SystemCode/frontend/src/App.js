@@ -19,6 +19,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MessageSnackbar from './components/core/MessageSnackbar';
+import ChatBot from './components/chatbot/ChatBot';
 import AppService, {messageQueue} from './services/AppService';
 import FakeImageDetector from './views/FakeImageDetector';
 
@@ -202,6 +203,7 @@ export default function App() {
         </main>
       </div>
       <MessageSnackbar queue={messageQueue}/>
+      <ChatBot/>
     </ThemeProvider>
   );
 }

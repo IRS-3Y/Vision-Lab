@@ -1,0 +1,11 @@
+.chatbot-container {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+
+  img {
+    width: 250px;
+    -webkit-filter: drop-shadow(10px 10px 5px rgb(170, 170, 170));
+    filter: drop-shadow(10px 10px 5px rgb(170, 170, 170));
+  }
+}
