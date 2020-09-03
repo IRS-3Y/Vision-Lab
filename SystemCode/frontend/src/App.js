@@ -20,7 +20,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MessageSnackbar from './components/core/MessageSnackbar';
 import ChatBot from './components/chatbot/ChatBot';
-import AppService, {messageQueue} from './services/AppService';
+import AppService, {messageQueue, getChatContent, setChatContent} from './services/AppService';
 import FakeImageDetector from './views/FakeImageDetector';
 
 const app = new AppService();
@@ -197,13 +197,13 @@ export default function App() {
           <div className={classes.drawerHeader} />
           <Switch>
             <Route path="/">
-              <FakeImageDetector/>
+              <FakeImageDetector setResult={setChatContent}/>
             </Route>
           </Switch>
         </main>
       </div>
       <MessageSnackbar queue={messageQueue}/>
-      <ChatBot getContent={() => ['Welcome']}/>
+      <ChatBot getContent={getChatContent}/>
     </ThemeProvider>
   );
 }

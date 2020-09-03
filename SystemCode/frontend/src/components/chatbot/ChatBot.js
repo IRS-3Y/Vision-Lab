@@ -10,7 +10,7 @@ export default function ChatBot({getContent}) {
     let handle = window.setInterval(() => {
       let content = getContent();
       setContent([...content]);
-    }, 1000);
+    }, 500);
     return () => { window.clearInterval(handle) };
   }, [getContent]);
 

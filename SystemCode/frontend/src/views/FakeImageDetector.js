@@ -12,15 +12,17 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function FakeImageDetector() {
+export default function FakeImageDetector({setResult}) {
   const classes = useStyles();
 
   const [file, setFile] = React.useState(null);
   const handleImageChange = files => {
     if(files.length){
       setFile(files[0]);
+      setResult(files[0].name);
     }else{
       setFile(null);
+      setResult(null);
     }
   }
   return (
