@@ -1,11 +1,44 @@
+%shadow {
+  -webkit-filter: drop-shadow(10px 10px 5px rgb(170, 170, 170));
+  filter: drop-shadow(10px 10px 5px rgb(170, 170, 170));
+}
+
+$color: white;
+$background: #525252;
+
 .chatbot-container {
   position: fixed;
   bottom: 0px;
   right: 0px;
 
   img {
-    width: 250px;
-    -webkit-filter: drop-shadow(10px 10px 5px rgb(170, 170, 170));
-    filter: drop-shadow(10px 10px 5px rgb(170, 170, 170));
+    @extend %shadow;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    height: 250px;
+  }
+
+  .chatbot-bubble {
+    @extend %shadow;
+    position: absolute;
+    bottom: 270px;
+    right: 100px;
+    width: 400px;
+    color: $color;
+    background: $background;
+    border: 1px solid #a7a7a7;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    padding: 8px 16px;
+  }
+  
+  .chatbot-bubble-arrow {
+    position: absolute;
+    bottom: -20px;
+    right: 15px;
+    border-left: 20px solid transparent;
+    border-top: 20px solid $background;
   }
 }

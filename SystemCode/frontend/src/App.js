@@ -203,7 +203,7 @@ export default function App() {
         </main>
       </div>
       <MessageSnackbar queue={messageQueue}/>
-      <ChatBot/>
+      <ChatBot getContent={() => ['Welcome']}/>
     </ThemeProvider>
   );
 }
