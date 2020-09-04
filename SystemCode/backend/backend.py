@@ -1,9 +1,9 @@
 '''
 Backend Flask App
 '''
-import app.factory
+from app import factory
 
-app = app.factory.build()
+app = factory.build()
 
 if __name__ == '__main__':
   app.run(debug=True)
