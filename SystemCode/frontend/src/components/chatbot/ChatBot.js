@@ -7,10 +7,14 @@ export default function ChatBot({getContent}) {
   const [content, setContent] = React.useState([]);
 
   React.useEffect(() => {
+    let prevContent = null;
     let handle = window.setInterval(() => {
       let content = getContent();
-      setContent([...content]);
-    }, 500);
+      if(content !== prevContent){
+        prevContent = content;
+        setContent(content);
+      }
+    }, 100);
     return () => { window.clearInterval(handle) };
   }, [getContent]);
 
