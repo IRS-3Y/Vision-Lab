@@ -133,7 +133,7 @@ export default function App() {
   };
 
   const logo = (
-    <Link to="/"><Typography className={classes.white} variant="h6" noWrap>PhotoLab</Typography></Link>
+    <Link to="/"><Typography className={classes.white} variant="h6" noWrap>VisionLab</Typography></Link>
   )
   const toolbarMenu = (
     <ButtonGroup variant="text">
