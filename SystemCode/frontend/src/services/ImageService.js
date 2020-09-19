@@ -16,12 +16,20 @@ export default class ImageService {
     return resp.data;
   }
 
+  classify = async (req) => {
+    let resp = await axios.post(`${this._baseUrl}/classify`, req);
+    return resp.data;
+  }
+
   detectFake = async (file) => {
-    let saved = await this.upload(file);
-    //TODO call prediction model
+    let image = await this.upload(file);
+    let result = await this.classify({type: 'real_fake', image});
     return {
-      uuid: saved.uuid,
-      info: 'I think this is a fake photo.'
+      image, result,
+      info: [
+        `I think this is a ${result.class} photo.`,
+        `real: ${result.real.toFixed(4)} fake: ${result.fake.toFixed(4)}`
+      ]
     }
   }
 }

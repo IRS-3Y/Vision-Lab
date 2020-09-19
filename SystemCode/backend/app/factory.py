@@ -6,6 +6,7 @@ from flask import Flask, Blueprint, jsonify, request
 
 from .context import set_obj
 from .images import save_image
+from .classifier import predict_real_fake
 
 
 def build():
@@ -44,6 +45,20 @@ def build_backend():
       return jsonify(result)
     else:
       return jsonify({'error': 'no image'})
+
+  # image classification
+  @backend.route('/image/classify', methods=['POST'])
+  def classify():
+    req = request.get_json()
+    usecase = req['type']
+
+    if(usecase == 'real_fake'):
+      img_uuid = req['image']['uuid']
+      img_type = req['image']['type']
+      result = predict_real_fake(img_uuid, img_type)
+      return jsonify(result)
+    else:
+      return jsonify({'error': 'invalid type'})
 
   return backend
 
