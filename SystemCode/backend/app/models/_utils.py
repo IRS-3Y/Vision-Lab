@@ -17,11 +17,11 @@ def models_dir(*paths):
   return path
 
 
-def model_path(model_name, model_version = 'default'):
+def model_path(model_name, model_version = 'default', file_ext = '.h5'):
   '''
   Get model file full path
   '''
-  filename = f"{model_version}.h5"
+  filename = f"{model_version}{file_ext}"
   return os.path.join(models_dir(model_name), filename)
 
 
@@ -32,3 +32,18 @@ def load_model(model_name, model_version = 'default'):
   path = model_path(model_name, model_version)
   return tf.keras.models.load_model(path)
 
+
+def build_model_checkpoint(model_name, model_version = 'default'):
+  '''
+  Build check-point callback
+  '''
+  path = model_path(model_name, model_version)
+  return tf.keras.callbacks.ModelCheckpoint(path, monitor='val_accuracy', verbose=0, save_best_only=True, mode='max')
+
+
+def build_csv_logger(model_name, model_version = 'default'):
+  '''
+  Build CSV logger callback
+  '''
+  path = model_path(model_name, model_version, '.csv')
+  return tf.keras.callbacks.CSVLogger(path)

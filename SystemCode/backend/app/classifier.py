@@ -9,13 +9,13 @@ def predict(inputs, model_name = 'experiment', model_version = 'default'):
   return model.predict(inputs)
 
 
-def predict_image(image_uuid, image_type = '.jpg', image_size = 128, model_name = 'experiment', model_version = 'default'):
+def predict_image(image_uuid, image_type = '.jpg', image_size = None, model_name = 'experiment', model_version = 'default'):
   img = load_image(image_uuid, image_type, resize=image_size)
-  inputs = np.array([img]).astype('float32') / 255
+  inputs = np.array([img]).astype('float32')
   return predict(inputs, model_name, model_version)
 
 
-def predict_real_fake(image_uuid, image_type = '.jpg', image_size = 128, model_name = 'experiment', model_version = 'default'):
+def predict_real_fake(image_uuid, image_type = '.jpg', image_size = None, model_name = 'experiment', model_version = 'default'):
   predicts = predict_image(image_uuid, image_type, image_size, model_name, model_version)
   [real, fake] = predicts[0]
   clz = "real" if real > fake else 'fake'
