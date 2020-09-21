@@ -7,16 +7,16 @@ from . import _utils
 
 
 MODEL_NAME = 'experiment'
+IMAGE_SIZE = 128
 
 
 def load_model(model_version = 'default'):
   return _utils.load_model(MODEL_NAME, model_version)
 
 
-def build_model(image_size = 128):
+def build_model():
   model = Sequential()
-  model.add(Input(shape=(None, None, 3)))
-  model.add(Resizing(image_size, image_size))
+  model.add(Input(shape=(IMAGE_SIZE, IMAGE_SIZE, 3)))
   model.add(Rescaling(1./255))
   model.add(Conv2D(32, (3, 3), padding='same', activation='relu'))
   model.add(Conv2D(32, (3, 3), padding='same', activation='relu'))

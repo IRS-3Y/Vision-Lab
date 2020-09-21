@@ -9,14 +9,15 @@ def predict(inputs, model_name = 'experiment', model_version = 'default'):
   return model.predict(inputs)
 
 
-def predict_image(image_uuid, image_type = '.jpg', image_size = None, model_name = 'experiment', model_version = 'default'):
-  img = load_image(image_uuid, image_type, resize=image_size)
+def predict_image(image_uuid, image_type = '.jpg', model_name = 'experiment', model_version = 'default'):
+  mdl = models[model_name]
+  img = load_image(image_uuid, image_type, resize=mdl.IMAGE_SIZE)
   inputs = np.array([img]).astype('float32')
   return predict(inputs, model_name, model_version)
 
 
-def predict_real_fake(image_uuid, image_type = '.jpg', image_size = None, model_name = 'experiment', model_version = 'default'):
-  predicts = predict_image(image_uuid, image_type, image_size, model_name, model_version)
+def predict_real_fake(image_uuid, image_type = '.jpg', model_name = 'experiment', model_version = 'default'):
+  predicts = predict_image(image_uuid, image_type, model_name, model_version)
   [real, fake] = predicts[0]
   clz = "real" if real > fake else 'fake'
   return {'class': clz, 'real': real.item(), 'fake': fake.item()}
