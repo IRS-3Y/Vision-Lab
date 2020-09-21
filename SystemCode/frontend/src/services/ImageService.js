@@ -23,7 +23,11 @@ export default class ImageService {
 
   detectFake = async (file) => {
     let image = await this.upload(file);
-    let result = await this.classify({type: 'real_fake', image});
+    let result = await this.classify({
+      type: 'real_fake', 
+      image,
+      model: config.backend.detectFake.model
+    });
     return {
       image, result,
       info: [

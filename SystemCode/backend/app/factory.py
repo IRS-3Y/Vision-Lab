@@ -55,7 +55,14 @@ def build_backend():
     if(usecase == 'real_fake'):
       img_uuid = req['image']['uuid']
       img_type = req['image']['type']
-      result = predict_real_fake(img_uuid, img_type)
+
+      mdl_name = None
+      mdl_version = None
+      if req['model'] is not None:
+        mdl_name = req['model']['name']
+        mdl_version = req['model']['version']
+      
+      result = predict_real_fake(img_uuid, img_type, mdl_name, mdl_version)
       return jsonify(result)
     else:
       return jsonify({'error': 'invalid type'})
