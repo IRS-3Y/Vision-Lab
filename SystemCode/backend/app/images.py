@@ -35,7 +35,7 @@ def load_image(image_uuid, image_type = '.jpg', resize = None):
       img = cv2.resize(img, (resize, resize))
       cv2.imwrite(path_resized, img)
 
-  return cv2.imread(path, cv2.IMREAD_UNCHANGED)
+  return cv2.imread(path, cv2.IMREAD_UNCHANGED)[..., ::-1]
 
 
 def save_image(image, uuid = None):
