@@ -2,7 +2,7 @@ const backend = {
   baseUrl: '/backend',
   detectFake: {
     model: {
-      name: 'resnet50',
+      name: 'resnet50v2',
       version: 'default'
     }
   }

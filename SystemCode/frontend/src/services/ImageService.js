@@ -6,6 +6,10 @@ export default class ImageService {
     this._baseUrl = `${config.backend.baseUrl}/image`;
   }
 
+  url = ({uuid, type, subdir = '/origin'}) => {
+    return `${this._baseUrl}${subdir}/${uuid}${type}`;
+  }
+
   upload = async (file) => {
     let form = new FormData();
     form.append('image', file);
@@ -21,8 +25,7 @@ export default class ImageService {
     return resp.data;
   }
 
-  detectFake = async (file) => {
-    let image = await this.upload(file);
+  detectFake = async (image) => {
     let result = await this.classify({
       type: 'real_fake', 
       image,

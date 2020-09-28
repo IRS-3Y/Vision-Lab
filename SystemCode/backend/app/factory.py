@@ -2,10 +2,10 @@
 Application factory methods
 '''
 import os
-from flask import Flask, Blueprint, jsonify, request
+from flask import Flask, Blueprint, jsonify, request, send_from_directory
 
 from .context import set_obj
-from .images import save_image
+from .images import save_image, images_dir
 from .classifier import predict_real_fake
 
 
@@ -35,6 +35,14 @@ def build_backend():
   @backend.route('/status')
   def status():
     return jsonify({'status': 'ok'})
+
+  # retrieve images
+  @backend.route('/image/<path:path>')
+  def image_get(path):
+    idx = path.rindex('/')
+    folder = images_dir(path[0:idx])
+    filename = path[idx+1:]
+    return send_from_directory(folder, filename)
 
   # store images
   @backend.route('/image', methods=['POST'])

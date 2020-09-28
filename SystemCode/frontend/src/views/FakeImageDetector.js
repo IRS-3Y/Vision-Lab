@@ -18,23 +18,24 @@ const useStyles = makeStyles(theme => ({
 export default function FakeImageDetector({setResult}) {
   const classes = useStyles();
 
-  const [file, setFile] = React.useState(null);
+  const [image, setImage] = React.useState(null);
   const handleImageChange = async files => {
     if(files.length){
       setResult(null);
-      setFile(files[0]);
-      let result = await service.detectFake(files[0]);
+      let uploaded = await service.upload(files[0]);
+      setImage(uploaded);
+      let result = await service.detectFake(uploaded);
       setResult(result.info);
     }else{
       setResult(null);
-      setFile(null);
+      setImage(null);
     }
   }
   return (
     <Paper className={classes.root}>
       <ImageDropzone onChange={handleImageChange}/>
       <br/>
-      <Image file={file}/>
+      <Image url={image? service.url(image): null}/>
     </Paper>
   )
 }

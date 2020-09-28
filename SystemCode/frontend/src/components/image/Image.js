@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Image({file, imgProps = {}}){
+export default function Image({url, file, imgProps = {}}){
   const classes = useStyles();
   const [image, setImage] = React.useState(null);
 
@@ -39,6 +39,7 @@ export default function Image({file, imgProps = {}}){
   
   return (
     <div className={classes.root}>
+      {url? <img className={classes.image} src={url} alt="" {...imgProps}/>: null}
       {image? <img className={classes.image} src={image} alt="" {...imgProps}/>: null}
     </div>
   )
