@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
+import { Image as AntdImage } from 'antd'
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -15,7 +16,10 @@ const useStyles = makeStyles(theme => ({
     margin: 0
   },
   image: {
-    maxWidth: "80vw"
+    maxWidth: 420,
+    "&:hover": {
+      cursor: 'pointer'
+    }
   }
 }))
 
@@ -39,8 +43,8 @@ export default function Image({url, file, imgProps = {}}){
   
   return (
     <div className={classes.root}>
-      {url? <img className={classes.image} src={url} alt="" {...imgProps}/>: null}
-      {image? <img className={classes.image} src={image} alt="" {...imgProps}/>: null}
+      {url? <AntdImage className={classes.image} src={url} alt="" {...imgProps}/>: null}
+      {image? <AntdImage className={classes.image} src={image} alt="" {...imgProps}/>: null}
     </div>
   )
 }
