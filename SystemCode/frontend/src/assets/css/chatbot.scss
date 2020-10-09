@@ -1,6 +1,6 @@
 %shadow {
-  -webkit-filter: drop-shadow(10px 10px 5px rgb(170, 170, 170));
-  filter: drop-shadow(10px 10px 5px rgb(170, 170, 170));
+  -webkit-filter: drop-shadow(10px 10px 5px rgb(121, 121, 121));
+  filter: drop-shadow(10px 10px 5px rgb(121, 121, 121));
 }
 
 $color: white;
@@ -8,8 +8,9 @@ $background: #525252;
 
 .chatbot-container {
   position: fixed;
-  bottom: 0px;
-  right: 0px;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1100;
 
   img {
     @extend %shadow;
@@ -27,11 +28,15 @@ $background: #525252;
     width: 400px;
     color: $color;
     background: $background;
-    border: 1px solid #a7a7a7;
+    border: 1px solid rgb(121, 121, 121);
     border-radius: 4px;
     font-size: 1.1rem;
     line-height: 1.5;
     padding: 8px 16px;
+
+    p {
+      margin: 8px 0;
+    }
   }
   
   .chatbot-bubble-arrow {
