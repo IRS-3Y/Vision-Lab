@@ -21,7 +21,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MessageSnackbar from './components/core/MessageSnackbar';
 import ChatBot from './components/chatbot/ChatBot';
 import AppService, {messageQueue, getChatContent, setChatContent} from './services/AppService';
-import FakeImageDetector from './views/FakeImageDetector';
+import HomeView from './views/HomeView';
+import ImageDetector from './views/ImageDetector';
 
 const app = new AppService();
 //check app status
@@ -196,14 +197,21 @@ export default function App() {
         <main className={clsx(classes.content, {[classes.contentShift]: open})}>
           <div className={classes.drawerHeader} />
           <Switch>
+            <Route path="/detector">
+              <ImageDetector setResult={setChatContent}/>
+            </Route>
             <Route path="/">
-              <FakeImageDetector setResult={setChatContent}/>
+              <HomeView/>
             </Route>
           </Switch>
         </main>
       </div>
       <MessageSnackbar queue={messageQueue}/>
-      <ChatBot getContent={getChatContent}/>
+      <Switch>
+        <Route path="/detector">
+          <ChatBot getContent={getChatContent}/>
+        </Route>
+      </Switch>
     </ThemeProvider>
   );
 }

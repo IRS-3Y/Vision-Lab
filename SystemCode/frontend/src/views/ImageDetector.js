@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function FakeImageDetector({setResult}) {
+export default function ImageDetector({setResult}) {
   const classes = useStyles();
 
   const [image, setImage] = React.useState(null);
