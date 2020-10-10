@@ -5,18 +5,20 @@ import { Affix, PageHeader } from 'antd'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    backgroundColor: "#eeeeee",
+    backgroundColor: "rgb(247, 247, 247, 0.7)",
     border: "1px solid rgb(235, 237, 240)"
   }
 }))
 
-export default function AffixHeader({title}){
+export default function AffixHeader({title, extra = [], children}){
   const classes = useStyles();
   const history = useHistory();
   return (
     <Affix offsetTop={80}>
       <div className={classes.root}>
-        <PageHeader title={title} ghost={false} onBack={() => history.push("/")}/>
+        <PageHeader title={title} extra={extra} onBack={() => history.push("/")}>
+          {children}
+        </PageHeader>
       </div>
     </Affix>
   )

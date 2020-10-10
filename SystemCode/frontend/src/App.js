@@ -22,6 +22,7 @@ import MessageSnackbar from './components/core/MessageSnackbar';
 import ChatBot from './components/chatbot/ChatBot';
 import AppService, {messageQueue, getChatContent, setChatContent} from './services/AppService';
 import HomeView from './views/HomeView';
+import ImageGenerator from './views/ImageGenerator';
 import ImageDetector from './views/ImageDetector';
 
 const app = new AppService();
@@ -57,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    zIndex: 900
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -197,6 +199,9 @@ export default function App() {
         <main className={clsx(classes.content, {[classes.contentShift]: open})}>
           <div className={classes.drawerHeader} />
           <Switch>
+            <Route path="/generator">
+              <ImageGenerator/>
+            </Route>
             <Route path="/detector">
               <ImageDetector setResult={setChatContent}/>
             </Route>
