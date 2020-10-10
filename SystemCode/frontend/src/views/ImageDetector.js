@@ -3,13 +3,13 @@ import { makeStyles } from '@material-ui/core';
 import ImageService from '../services/ImageService';
 import ImageDropzone from '../components/image/ImageDropzone';
 import Image from '../components/image/Image';
+import AffixHeader from '../components/layout/AffixHeader'
 
 const service = new ImageService();
 
 const useStyles = makeStyles(theme => ({
   root: {
-    margin: theme.spacing(2),
-    padding: theme.spacing(2)
+    margin: theme.spacing(2)
   }
 }))
 
@@ -31,6 +31,8 @@ export default function ImageDetector({setResult}) {
   }
   return (
     <div className={classes.root}>
+      <AffixHeader title="Image Detector"/>
+      <br/>
       <ImageDropzone onChange={handleImageChange}/>
       <br/>
       <Image url={image? service.url(image): null}/>
