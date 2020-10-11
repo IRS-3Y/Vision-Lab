@@ -2,6 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { Image as AntdImage } from 'antd'
 
+import noimage from '../../assets/img/noimage.png'
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -43,8 +45,8 @@ export default function Image({url, file, imgProps = {}}){
   
   return (
     <div className={classes.root}>
-      {url? <AntdImage className={classes.image} src={url} alt="" {...imgProps}/>: null}
-      {image? <AntdImage className={classes.image} src={image} alt="" {...imgProps}/>: null}
+      {url? <AntdImage className={classes.image} src={url} alt="" fallback={noimage} {...imgProps}/>: null}
+      {image? <AntdImage className={classes.image} src={image} alt="" fallback={noimage} {...imgProps}/>: null}
     </div>
   )
 }
