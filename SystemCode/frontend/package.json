@@ -37,9 +37,9 @@
     "eject": "react-scripts eject",
     "build": "run-s build:app build:docker",
     "build:app": "react-scripts build",
-    "build:docker": "copyfiles -f \"./docker/nginx/*\" ./build && docker build --tag=frontend:dev build",
-    "docker:up": "docker-compose -p test -f ./docker/compose.yml up -d",
-    "docker:down": "docker-compose -p test -f ./docker/compose.yml down -v"
+    "build:docker": "copyfiles -f \"./docker/nginx/*\" ./build && docker build --tag=vlab-frontend:dev build",
+    "docker:up": "docker-compose -p vlab -f ./docker/compose.yml up -d",
+    "docker:down": "docker-compose -p vlab -f ./docker/compose.yml down -v"
   },
   "eslintConfig": {
     "extends": "react-app"

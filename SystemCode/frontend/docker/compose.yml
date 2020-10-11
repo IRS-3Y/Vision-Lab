@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  frontend:
+    image: "vlab-frontend:dev"
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+  backend:
+    image: "vlab-backend:dev"
+    ports:
+      - "5100:5000"
