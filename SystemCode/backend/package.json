@@ -1,0 +1,21 @@
+{
+  "name": "vlab-backend",
+  "version": "0.1.0",
+  "description": "Vision Lab (back-end)",
+  "private": true,
+  "dependencies": {},
+  "scripts": {
+    "build": "run-s clean build:docker",
+    "build:docker": "run-s copy:* && docker build --tag=vlab-backend:dev target",
+    "clean": "del-cli ./target",
+    "copy:app": "copyfiles \"app/**/*.py\" ./target/ && copyfiles backend.py ./target/",
+    "copy:models": "copyfiles \"instance/models/**/*\" ./target/",
+    "copy:docker": "copyfiles -f \"./docker/*\" ./target",
+    "start": "docker run --rm -it -p 5000:5000 vlab-backend:dev"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.2.0",
+    "del-cli": "^3.0.0",
+    "npm-run-all": "^4.1.5"
+  }
+}
