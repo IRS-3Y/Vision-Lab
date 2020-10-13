@@ -104,11 +104,11 @@ def _sanitize_tf_config(config_dict: dict = None) -> dict:
     return cfg
 
 
-def init_tf(config_dict: dict = None) -> None:
+def init_tf(config_dict: dict = None) -> tf.Session:
     """Initialize TensorFlow session using good default settings."""
     # Skip if already initialized.
     if tf.get_default_session() is not None:
-        return
+        return tf.get_default_session()
 
     # Setup config dict and random seeds.
     cfg = _sanitize_tf_config(config_dict)
@@ -129,7 +129,7 @@ def init_tf(config_dict: dict = None) -> None:
             os.environ[fields[1]] = str(value)
 
     # Create default TensorFlow session.
-    create_session(cfg, force_as_default=True)
+    return create_session(cfg, force_as_default=True)
 
 
 def assert_tf_initialized():

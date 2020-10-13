@@ -9,6 +9,7 @@
 import pickle
 import dnnlib
 import dnnlib.tflib as tflib
+import tensorflow as tf
 
 #----------------------------------------------------------------------------
 # StyleGAN2 Google Drive root: https://drive.google.com/open?id=1QHc-yF5C3DChRwSdZKcx1w6K8JvSxQi7
@@ -61,20 +62,31 @@ def get_path_or_url(path_or_gdrive_path):
 
 _cached_networks = dict()
 
+_tf_singleton = {'session': None, 'graph': None}
+
 def load_networks(path_or_gdrive_path):
+    if _tf_singleton['session'] is None:
+        _tf_singleton['session'] = tflib.init_tf()
+        _tf_singleton['graph'] = tf.get_default_graph()
+    
+    session = _tf_singleton['session']
+    graph = _tf_singleton['graph']
+    
     path_or_url = get_path_or_url(path_or_gdrive_path)
     if path_or_url in _cached_networks:
-        return _cached_networks[path_or_url]
+        G, D, Gs = _cached_networks[path_or_url]
+        return G, D, Gs, session, graph
 
     if dnnlib.util.is_url(path_or_url):
         stream = dnnlib.util.open_url(path_or_url, cache_dir='.stylegan2-cache')
     else:
         stream = open(path_or_url, 'rb')
 
-    tflib.init_tf()
-    with stream:
+    with stream, graph.as_default(), session.as_default():
+        tf.keras.backend.set_session(session)
         G, D, Gs = pickle.load(stream, encoding='latin1')
+
     _cached_networks[path_or_url] = G, D, Gs
-    return G, D, Gs
+    return G, D, Gs, session, graph
 
 #----------------------------------------------------------------------------
