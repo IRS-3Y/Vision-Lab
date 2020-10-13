@@ -45,6 +45,26 @@ const useStyles = makeStyles(theme => ({
 export default function ImageGenerator(){
   const classes = useStyles();
 
+  let [images, setImages] = React.useState([]);
+  let [limit, setLimit] = React.useState(10);
+
+  React.useEffect(() => {
+    let active = true;
+    if(images.length < limit){
+      service_tf1.generate({
+        name: 'stylegan2',
+        version: 'generator_yellow-stylegan2-config-f'
+      })
+      .then(image => {
+        if(active){
+          setImages([...images, image]);
+        }
+      },
+      err => console.error(err));
+    }
+    return () => { active = false; };
+  }, [images, limit]);
+
   const models = [{
     name: 'Model A',
     likes: 1207,
@@ -65,26 +85,10 @@ export default function ImageGenerator(){
     </div>
   ));
 
-  const images = [
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-    "6685fade-722d-4d40-8cb6-7d293d63ee47",
-  ].map((uuid, i) => {
-    let url = service.url({uuid, type: '.png'});
+  const imageCards = images.map(({uuid, type, model}, i) => {
+    let url = model.name === 'stylegan2'?
+      service_tf1.url({uuid, type, subdir: model.name}):
+      service.url({uuid, type, subdir: model.name});
     return (
       <ImageCard className={classes.image} key={i}
         url={url}
@@ -100,7 +104,7 @@ export default function ImageGenerator(){
         </div>
       </AffixHeader>
       <div className={classes.container}>
-        {images}
+        {imageCards}
       </div>
     </div>
   )

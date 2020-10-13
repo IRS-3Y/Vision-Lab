@@ -9,6 +9,7 @@ import tensorflow as tf
 from .context import set_obj
 from .images import save_image, images_dir
 from .classifier import predict_real_fake
+from .generator import generate_image
 
 
 def build():
@@ -82,6 +83,18 @@ def build_backend():
       return jsonify(result)
     else:
       return jsonify({'error': 'invalid type'})
+
+  # image generation
+  @backend.route('/image/generate', methods=['POST'])
+  def generate():
+    req = request.get_json()
+    if req['model'] is None:
+      return jsonify({'error': 'missing model'})
+    else:
+      mdl_name = req['model']['name']
+      mdl_version = req['model']['version']
+      result = generate_image(mdl_name, mdl_version)
+      return jsonify(result)
 
   return backend
 

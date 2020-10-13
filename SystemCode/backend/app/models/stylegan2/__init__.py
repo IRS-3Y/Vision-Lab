@@ -17,5 +17,5 @@ if _path not in sys.path:
 def generate_image(model_version = 'default'):
   model_file = os.path.join(_utils.models_dir(MODEL_NAME), f'{model_version}.pkl')
   uuid = import_module(f'{__name__}.main').generate_image(model_file)
-  model = {'type': MODEL_NAME, 'version': model_version}
+  model = {'name': MODEL_NAME, 'version': model_version}
   return {'uuid': uuid, 'type': '.png', 'model': model}

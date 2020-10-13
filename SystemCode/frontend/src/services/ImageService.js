@@ -9,8 +9,8 @@ export default class ImageService {
     }
   }
 
-  url = ({uuid, type, subdir = '/origin'}) => {
-    return `${this._baseUrl}${subdir}/${uuid}${type}`;
+  url = ({uuid, type, subdir = 'origin'}) => {
+    return `${this._baseUrl}/${subdir}/${uuid}${type}`;
   }
 
   upload = async (file) => {
@@ -41,5 +41,10 @@ export default class ImageService {
         `real: ${result.real.toFixed(4)} fake: ${result.fake.toFixed(4)}`
       ]
     }
+  }
+
+  generate = async (model) => {
+    let resp = await axios.post(`${this._baseUrl}/generate`, {model});
+    return resp.data;
   }
 }
