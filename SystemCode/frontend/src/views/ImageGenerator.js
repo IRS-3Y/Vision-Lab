@@ -9,8 +9,19 @@ import {
 import ImageService from '../services/ImageService'
 import ImageCard from '../components/image/ImageCard'
 import AffixHeader from '../components/layout/AffixHeader'
+import {findBackend} from '../adaptor'
 
 const service = new ImageService();
+
+let service_tf1 = null;
+findBackend(({tensorflow}) => {
+  return tensorflow.version.startsWith('1.');
+})
+.then(({tensorflow, baseUrl}) => {
+  console.info(`Found tensorflow-v${tensorflow.version} backend on: ${baseUrl}`);
+  service_tf1 = new ImageService({baseUrl});
+}, 
+err => console.error(err));
 
 const useStyles = makeStyles(theme => ({
   root: {

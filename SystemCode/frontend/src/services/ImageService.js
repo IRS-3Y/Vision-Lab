@@ -2,8 +2,11 @@ import axios from 'axios';
 import config from '../config';
 
 export default class ImageService {
-  constructor(){
+  constructor({baseUrl} = {}){
     this._baseUrl = `${config.backend.baseUrl}/image`;
+    if(baseUrl){
+      this._baseUrl = `${baseUrl}/image`;
+    }
   }
 
   url = ({uuid, type, subdir = '/origin'}) => {
@@ -25,11 +28,11 @@ export default class ImageService {
     return resp.data;
   }
 
-  detectFake = async (image) => {
+  detect = async (image) => {
     let result = await this.classify({
       type: 'real_fake', 
       image,
-      model: config.backend.detectFake.model
+      model: config.backend.detector.model
     });
     return {
       image, result,

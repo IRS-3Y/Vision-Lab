@@ -22,7 +22,7 @@ export default function ImageDetector({setResult}) {
       setResult(null);
       let uploaded = await service.upload(files[0]);
       setImage(uploaded);
-      let result = await service.detectFake(uploaded);
+      let result = await service.detect(uploaded);
       setResult(result.info);
     }else{
       setResult(null);
