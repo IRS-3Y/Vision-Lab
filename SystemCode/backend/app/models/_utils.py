@@ -5,6 +5,7 @@ import os
 import tensorflow as tf
 
 from ..context import get_obj
+from ..images import images_dir
 
 
 _model_cache = {}

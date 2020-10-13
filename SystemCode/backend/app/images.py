@@ -4,6 +4,7 @@ Handling image storage and pre-processing
 import os
 import cv2
 from uuid import uuid4
+from importlib import import_module
 
 from .context import get_obj
 
@@ -51,3 +52,10 @@ def save_image(image, uuid = None):
 
   return {'uuid': uuid, 'type': filetype}
 
+
+def plot_image(image_uuid, image_type = '.jpg', image_dir = 'origin'):
+  plt = import_module('matplotlib.pyplot')
+  image_path = os.path.join(images_dir(image_dir), f'{image_uuid}{image_type}')
+  img = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)[..., ::-1]
+  plt.imshow(img)
+  plt.show()
