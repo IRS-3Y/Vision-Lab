@@ -3,6 +3,8 @@ Application factory methods
 '''
 import os
 from flask import Flask, Blueprint, jsonify, request, send_from_directory
+from flask_cors import CORS
+import tensorflow as tf
 
 from .context import set_obj
 from .images import save_image, images_dir
@@ -14,6 +16,7 @@ def build():
   Build flask application
   '''
   app = Flask(__name__, instance_relative_config=True)
+  CORS(app)
   
   # ensure the instance folder exists
   os.makedirs(app.instance_path, exist_ok=True)
@@ -34,7 +37,12 @@ def build_backend():
   # check status
   @backend.route('/status')
   def status():
-    return jsonify({'status': 'ok'})
+    return jsonify({
+      'status': 'ok',
+      'tensorflow': {
+        'version': tf.__version__
+      }
+    })
 
   # retrieve images
   @backend.route('/image/<path:path>')
