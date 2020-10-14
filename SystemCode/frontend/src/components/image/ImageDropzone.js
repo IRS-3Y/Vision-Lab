@@ -4,7 +4,8 @@ import {DropzoneArea} from 'material-ui-dropzone';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    minHeight: '160px'
+    minHeight: '160px',
+    color: 'rgba(0,0,0,0.5)'
   }
 }))
 
