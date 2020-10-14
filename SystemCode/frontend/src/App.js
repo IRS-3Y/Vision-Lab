@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function App() {
+export default function App({sideMenu = false} = {}) {
   const classes = useStyles();
   const theme = useTheme();
   const history = useHistory();
@@ -152,13 +152,15 @@ export default function App() {
         <AppBar className={clsx(classes.appBar, {[classes.appBarShift]: open})}
           position="fixed">
           <Toolbar className={classes.toolbar}>
-            <IconButton className={clsx(classes.menuButton, open && classes.hide)}
-              aria-label="menu"
-              edge="start"
-              color="inherit"
-              onClick={handleDrawerOpen}>
-              <MenuIcon />
-            </IconButton>
+            {sideMenu? (
+              <IconButton className={clsx(classes.menuButton, open && classes.hide)}
+                aria-label="menu"
+                edge="start"
+                color="inherit"
+                onClick={handleDrawerOpen}>
+                <MenuIcon />
+              </IconButton>
+            ): null}
             {open? null: logo}
             {open? toolbarMenu: null}
             <div className={classes.toolButtonGroup}>
