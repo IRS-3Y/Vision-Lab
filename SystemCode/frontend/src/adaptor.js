@@ -12,7 +12,7 @@ export async function findBackend(test){
   }catch(err){
     console.debug(err);
   }
-  for(let i=5001; i<5010; i++){
+  for(let i=5001; i<5004; i++){
     try{
       let testUrl = `http://${window.location.hostname}:${i}${baseUrl}`
       let resp = await axios.get(`${testUrl}/status`);

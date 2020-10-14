@@ -1,5 +1,8 @@
+import _ from 'lodash'
 import axios from 'axios';
+import {messageQueue} from './AppService';
 import config from '../config';
+import {findBackend} from '../adaptor'
 
 export default class ImageService {
   constructor({baseUrl} = {}){
@@ -43,8 +46,57 @@ export default class ImageService {
     }
   }
 
-  generate = async (model) => {
-    let resp = await axios.post(`${this._baseUrl}/generate`, {model});
+  generate = async ({name, version}) => {
+    let resp = await axios.post(`${this._baseUrl}/generate`, {model: {name, version}});
     return resp.data;
+  }
+}
+
+// customized for multiple tensorflow backends
+const _singleton = new ImageService();
+let _inst_tf1 = null;
+findBackend(({tensorflow}) => {
+  return tensorflow.version.startsWith('1.');
+})
+.then(({tensorflow, baseUrl}) => {
+  console.info(`Found tensorflow-v${tensorflow.version} backend on: ${baseUrl}`);
+  _inst_tf1 = new ImageService({baseUrl});
+}, 
+err => {
+  console.error(err);
+  messageQueue.push({
+    severity: "warning",
+    title: "TensorFlow v1 Backend Disconnected",
+    text: "StyleGAN is NOT supported when TensorFlow v1 Backend is disconnected",
+    lifespan: 60000
+  })
+});
+
+export function isValidModel(model){
+  if(_inst_tf1){
+    return true;
+  }else{
+    return model.name !== 'stylegan2';
+  }
+}
+
+export async function generateImage(models = []){
+  //excluding stylegan2 model if no tf1 backend
+  models = models.filter(isValidModel);
+  if(models.length < 1){
+    messageQueue.push({
+      severity: "warning",
+      title: "Model Not Selected",
+      text: "Please enable at least one model for image generation",
+      lifespan: 5000
+    });
+    return null;
+  }
+  let model = _.sample(models);
+  let service = (model.name === 'stylegan2')? _inst_tf1: _singleton;
+  let image = await service.generate(model);
+  return {
+    ...image,
+    url: service.url({...image, subdir: model.name})
   }
 }

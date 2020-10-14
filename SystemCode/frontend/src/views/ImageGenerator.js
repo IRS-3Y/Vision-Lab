@@ -8,23 +8,10 @@ import {
   CloudDownloadOutlined
 } from '@ant-design/icons'
 
-import ImageService from '../services/ImageService'
+import {generateImage} from '../services/ImageService'
 import ImageCard from '../components/image/ImageCard'
 import AffixHeader from '../components/layout/AffixHeader'
 import config from '../config'
-import {findBackend} from '../adaptor'
-
-const service = new ImageService();
-
-let service_tf1 = null;
-findBackend(({tensorflow}) => {
-  return tensorflow.version.startsWith('1.');
-})
-.then(({tensorflow, baseUrl}) => {
-  console.info(`Found tensorflow-v${tensorflow.version} backend on: ${baseUrl}`);
-  service_tf1 = new ImageService({baseUrl});
-}, 
-err => console.error(err));
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -75,12 +62,8 @@ export default function ImageGenerator(){
   React.useEffect(() => {
     let active = true;
     if(images.length < limit){
-      service_tf1.generate({
-        name: 'stylegan2',
-        version: 'generator_yellow-stylegan2-config-f'
-      })
-      .then(image => {
-        if(active){
+      generateImage(config.backend.generator.models).then(image => {
+        if(active && image){
           setImages([...images, image]);
         }
       },
@@ -109,10 +92,7 @@ export default function ImageGenerator(){
     </div>
   ));
 
-  const imageCards = images.map(({uuid, type, model}, i) => {
-    let url = model.name === 'stylegan2'?
-      service_tf1.url({uuid, type, subdir: model.name}):
-      service.url({uuid, type, subdir: model.name});
+  const imageCards = images.map(({url}, i) => {
     return (
       <ImageCard className={classes.image} key={i}
         url={url}

@@ -5,6 +5,8 @@ import AlertTitle from '@material-ui/lab/AlertTitle';
 import Typography from '@material-ui/core/Typography';
 import { v4 as uuid } from 'uuid';
 
+import '../../assets/css/message-snackbar.scss'
+
 function schedule(task, milliseconds, recursive){
   let handle = null, cancel = null;
   if(recursive){
@@ -36,7 +38,7 @@ export default class MessageSnackbar extends React.Component{
     const {defaultSeverity, anchorOrigin, autoHideDuration} = this.props;
     const {open, message} = this.state;
     return (
-      <Snackbar key={message.id}
+      <Snackbar className="message-snackbar" key={message.id}
         anchorOrigin={anchorOrigin}
         autoHideDuration={message.lifespan? message.lifespan: autoHideDuration}
         open={open}
@@ -45,7 +47,7 @@ export default class MessageSnackbar extends React.Component{
       >
         <Alert severity={message.severity? message.severity: defaultSeverity}>
           {message.title? <AlertTitle>{message.title}</AlertTitle>: null}
-          {message.text? <Typography variant="subtitle2">{message.text}</Typography>: null}
+          {message.text? <Typography className="message-text" variant="subtitle2">{message.text}</Typography>: null}
         </Alert>
       </Snackbar>
     )
