@@ -1,7 +1,9 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
-import { Switch } from 'antd'
+import { Switch, Spin } from 'antd'
 import {
+  PlusOutlined,
+  LoadingOutlined,
   HeartTwoTone,
   CloudDownloadOutlined
 } from '@ant-design/icons'
@@ -9,6 +11,7 @@ import {
 import ImageService from '../services/ImageService'
 import ImageCard from '../components/image/ImageCard'
 import AffixHeader from '../components/layout/AffixHeader'
+import config from '../config'
 import {findBackend} from '../adaptor'
 
 const service = new ImageService();
@@ -39,6 +42,26 @@ const useStyles = makeStyles(theme => ({
   image: {
     margin: theme.spacing(2,2,0,0),
     width: 200
+  },
+  imagePlus: {
+    margin: theme.spacing(2,2,0,0),
+    width: 200,
+    height: 200,
+    border: "4px dashed rgb(0, 0, 0, 0.12)",
+    borderRadius: theme.spacing(2),
+    "&:hover": {
+      cursor: 'pointer'
+    }
+  },
+  imagePlusIcon: {
+    width: 192,
+    height: 192,
+    "& svg": {
+      margin: 46,
+      width: 100,
+      height: 100,
+      color: "rgb(190, 190, 190)"
+    }
   }
 }))
 
@@ -46,7 +69,8 @@ export default function ImageGenerator(){
   const classes = useStyles();
 
   let [images, setImages] = React.useState([]);
-  let [limit, setLimit] = React.useState(10);
+  let [limit, setLimit] = React.useState(0);
+  let generateMore = () => setLimit(limit => limit + config.backend.generator.batchSize);
 
   React.useEffect(() => {
     let active = true;
@@ -96,6 +120,15 @@ export default function ImageGenerator(){
         onDislike={()=>console.log('dislike')}/>
     )
   })
+  const imagePlus = (
+    <div className={classes.imagePlus}>
+      {images.length < limit?(
+        <Spin indicator={<LoadingOutlined spin className={classes.imagePlusIcon}/>}/>
+      ):(
+        <PlusOutlined className={classes.imagePlusIcon} onClick={generateMore}/>
+      )}
+    </div>
+  )
   return (
     <div className={classes.root}>
       <AffixHeader title="Image Generator">
@@ -105,6 +138,7 @@ export default function ImageGenerator(){
       </AffixHeader>
       <div className={classes.container}>
         {imageCards}
+        {imagePlus}
       </div>
     </div>
   )

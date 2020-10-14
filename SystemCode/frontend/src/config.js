@@ -5,6 +5,9 @@ const backend = {
       name: 'resnet50v2',
       version: 'default'
     }
+  },
+  generator: {
+    batchSize: 10
   }
 };
 
