@@ -10,6 +10,7 @@ from .context import set_obj
 from .images import save_image, images_dir
 from .classifier import predict_real_fake
 from .generator import generate_image
+from .entities import set_setting, get_settings
 
 
 def build():
@@ -44,6 +45,24 @@ def build_backend():
         'version': tf.__version__
       }
     })
+
+  # get system settings
+  @backend.route('/settings')
+  def settings_get():
+    settings = {}
+    for s in get_settings():
+      settings[s.key] = s.value
+    return jsonify(settings)
+
+  # set system settings
+  @backend.route('/settings', methods=['POST'])
+  def settings_post():
+    req = request.get_json()
+    count = 0
+    for key in req:
+      set_setting(key, req[key])
+      count += 1
+    return jsonify({'count': count})
 
   # retrieve images
   @backend.route('/image/<path:path>')
