@@ -50,6 +50,16 @@ export default class ImageService {
     let resp = await axios.post(`${this._baseUrl}/generate`, {model: {name, version}});
     return resp.data;
   }
+
+  postStats = async ({image, model:{name,version}, stats = []}) => {
+    let resp = await axios.post(`${this._baseUrl}/stats`, {image, model: {name, version}, stats});
+    return resp.data;
+  }
+
+  getStats = async () => {
+    let resp = await axios.get(`${this._baseUrl}/stats`);
+    return resp.data;
+  }
 }
 
 // customized for multiple tensorflow backends

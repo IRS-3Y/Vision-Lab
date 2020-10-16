@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Switch, Route, Link, useHistory } from 'react-router-dom';
+import { Switch, Route, Link } from 'react-router-dom';
 import { makeStyles, useTheme, createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from "@material-ui/styles";
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -20,12 +20,11 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MessageSnackbar from './components/core/MessageSnackbar';
 import ChatBot from './components/chatbot/ChatBot';
-import AppService, {messageQueue, getChatContent, setChatContent} from './services/AppService';
+import {messageQueue, getChatContent, setChatContent} from './services/AppService';
 import HomeView from './views/HomeView';
 import ImageGenerator from './views/ImageGenerator';
 import ImageDetector from './views/ImageDetector';
 
-const app = new AppService();
 //check app status
 //app.checkStatus();
 //load app settings from backend
@@ -125,7 +124,6 @@ const useStyles = makeStyles((theme) => ({
 export default function App({sideMenu = false} = {}) {
   const classes = useStyles();
   const theme = useTheme();
-  const history = useHistory();
 
   const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {

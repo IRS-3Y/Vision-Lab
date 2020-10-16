@@ -21,9 +21,11 @@ export default function ImageCard({
     }
   }
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
+    if(onDownload){
+      await onDownload();
+    }
     downloadImage(url);
-    onDownload && onDownload();
   }
 
   const actions = [];
@@ -50,7 +52,9 @@ export default function ImageCard({
 
 function downloadImage(url){
   let link = document.createElement('a');
+  link.style.display = "none";
   link.href = url;
+  link.target = "_blank";
   link.download = url.substring(url.lastIndexOf('/')+1);
   document.body.appendChild(link);
   link.click();

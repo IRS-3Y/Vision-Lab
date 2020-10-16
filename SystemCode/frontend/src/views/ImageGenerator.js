@@ -8,10 +8,12 @@ import {
   CloudDownloadOutlined
 } from '@ant-design/icons'
 
-import {generateImage} from '../services/ImageService'
+import ImageService, {generateImage} from '../services/ImageService'
 import ImageCard from '../components/image/ImageCard'
 import AffixHeader from '../components/layout/AffixHeader'
 import config from '../config'
+
+const service = new ImageService();
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -72,18 +74,19 @@ export default function ImageGenerator(){
   }
 
   React.useEffect(() => {
-    let mdls = models;
-    if(mdls.length < 1){
+    if(models.length < 1){
       //init model list
-      mdls = config.backend.generator.models.map(m => ({
-        ...m,
-        likes: 10,
-        downloads: 20
-      }));
-      setModels(mdls);
+      service.getStats().then(stats => {
+        let mdls = config.backend.generator.models.map(m => {
+          let stat = stats.find(({model}) => model.name === m.name && model.version === m.version);
+          let {likes=0, downloads=0} = (stat || {});
+          return {...m, likes, downloads};
+        });
+        setModels(mdls);
+      });
     }else{
       //handle model deselection
-      mdls = models.filter(m => m.enabled);
+      let mdls = models.filter(m => m.enabled);
       if(mdls.length < 1){
         setLimit(0);
         setImages([]);
@@ -107,20 +110,43 @@ export default function ImageGenerator(){
     return () => { active = false; };
   }, [models, images, limit]);
 
-  const modelList = models.map(({name, version, title, enabled, disabled, likes, downloads}, i) => (
-    <div key={i} className={classes.model}>
-      <div style={{marginBottom: 8}}>{title}{' '}<Switch checked={enabled} disabled={disabled} onChange={toggleModel(name, version)}/></div>
-      <HeartTwoTone twoToneColor="#ff3629"/>{' '}{likes}
-      <CloudDownloadOutlined style={{color: '#097bd9', marginLeft: 12}}/>{' '}{downloads}
-    </div>
-  ));
+  //prevent model change during image generation
+  let modelFixed = images.length < limit;
+  if(models.filter(m => m.enabled).length < 1){
+    modelFixed = false;
+  }
+  const modelList = models.map(({name, version, title, enabled, disabled, likes, downloads}, i) => {
+    return (
+      <div key={i} className={classes.model}>
+        <div style={{marginBottom: 8}}>{title}{' '}<Switch checked={enabled} disabled={disabled || modelFixed} onChange={toggleModel(name, version)}/></div>
+        <HeartTwoTone twoToneColor="#ff3629"/>{' '}{likes}
+        <CloudDownloadOutlined style={{color: '#097bd9', marginLeft: 12}}/>{' '}{downloads}
+      </div>
+    )
+  });
 
-  const imageCards = images.map(({url}, i) => {
+  const imageCards = images.map(({uuid, type, model, url}, i) => {
+    let updateStat = (stat, delta) => {
+      return async () => {
+        await service.postStats({
+          image: {uuid, type},
+          model,
+          stats: [{name: stat, delta}] 
+        });
+        setModels(models => models.map(m => {
+          if(m.name === model.name && m.version === model.version){
+            return {...m, [stat]: m[stat] + delta};
+          }
+          return m;
+        }));
+      };
+    }
     return (
       <ImageCard className={classes.image} key={i}
         url={url}
-        onLike={()=>console.log('like')}
-        onDislike={()=>console.log('dislike')}/>
+        onLike={updateStat('likes', 1)}
+        onDislike={updateStat('likes', -1)}
+        onDownload={updateStat('downloads', 1)}/>
     )
   })
   const imagePlus = (
