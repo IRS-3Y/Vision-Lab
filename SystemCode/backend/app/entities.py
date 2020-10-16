@@ -31,6 +31,20 @@ class Setting(Base):
   def __repr__(self):
     return f"<Setting(key='{self.key}')>"
 
+class Image(Base):
+  __tablename__ = 'images'
+
+  id = Column(Integer, primary_key=True)
+  uuid = Column(String(36))
+  image_type = Column(String(10))
+  model_name = Column(String(255))
+  model_version = Column(String(255))
+  likes = Column(Integer)
+  downloads = Column(Integer)
+
+  def __repr__(self):
+    return f"<Image(uuid='{self.uuid}')>"
+
 
 def set_setting(key, value, session = None):
   commit = False
@@ -75,7 +89,7 @@ def init(debug = False):
   if _init:
     return
   _init = True
-  
+
   engine = get_engine(echo = debug)
   Base.metadata.create_all(engine)
 

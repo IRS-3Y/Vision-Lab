@@ -7,7 +7,7 @@ from flask_cors import CORS
 import tensorflow as tf
 
 from .context import set_obj
-from .images import save_image, images_dir
+from .images import save_image, images_dir, get_image_stats, set_image_stat
 from .classifier import predict_real_fake
 from .generator import generate_image
 from .entities import set_setting, get_settings
@@ -84,7 +84,7 @@ def build_backend():
 
   # image classification
   @backend.route('/image/classify', methods=['POST'])
-  def classify():
+  def image_classify():
     req = request.get_json()
     usecase = req['type']
 
@@ -105,7 +105,7 @@ def build_backend():
 
   # image generation
   @backend.route('/image/generate', methods=['POST'])
-  def generate():
+  def image_generate():
     req = request.get_json()
     if req['model'] is None:
       return jsonify({'error': 'missing model'})
@@ -114,6 +114,26 @@ def build_backend():
       mdl_version = req['model']['version']
       result = generate_image(mdl_name, mdl_version)
       return jsonify(result)
+
+  # query image statistics
+  @backend.route('/image/stats')
+  def image_stats():
+    return jsonify(get_image_stats())
+
+  # update image statistics
+  @backend.route('/image/stats', methods=['POST'])
+  def image_stats_post():
+    req = request.get_json()
+    try:
+      image = req['image']
+      model = req['model']
+      count = 0
+      for stat in req['stats']:
+        set_image_stat(image['uuid'], image['type'], model['name'], model['version'], stat['name'], stat['delta'])
+        count += 1
+      return jsonify({'count': count})
+    except KeyError as e:
+      return jsonify({'error': f"missing {e.args[0]}"})
 
   return backend
 
