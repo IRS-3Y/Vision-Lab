@@ -20,15 +20,17 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MessageSnackbar from './components/core/MessageSnackbar';
 import ChatBot from './components/chatbot/ChatBot';
-import {messageQueue, getChatContent, setChatContent} from './services/AppService';
+import AppService, {messageQueue, getChatContent, setChatContent} from './services/AppService';
 import HomeView from './views/HomeView';
+import SystemSettings from './views/SystemSettings'
 import ImageGenerator from './views/ImageGenerator';
 import ImageDetector from './views/ImageDetector';
 
+const app = new AppService();
 //check app status
 //app.checkStatus();
 //load app settings from backend
-//app.loadSettings();
+app.loadSettings();
 
 const drawerWidth = 240;
 
@@ -199,6 +201,9 @@ export default function App({sideMenu = false} = {}) {
         <main className={clsx(classes.content, {[classes.contentShift]: open})}>
           <div className={classes.drawerHeader} />
           <Switch>
+            <Route path="/settings">
+              <SystemSettings/>
+            </Route>
             <Route path="/generator">
               <ImageGenerator/>
             </Route>

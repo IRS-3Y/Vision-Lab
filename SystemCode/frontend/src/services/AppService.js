@@ -20,33 +20,12 @@ export {messageQueue, getChatContent, setChatContent};
 
 export default class AppService {
   constructor(){
-    this._baseUrl = `${config.backend.baseUrl}/app`;
+    this._baseUrl = `${config.backend.baseUrl}`;
   }
 
   getStatus = async () => {
     let resp = await axios.get(`${this._baseUrl}/status`);
     return resp.data;
-  }
-
-  checkStatus = () => {
-    this.getStatus().then(status => {
-      if(!status.dialogflowConnected){
-        messageQueue.push({
-          severity: "warning",
-          title: "Dialogflow Disconnected",
-          text: "Free text search is NOT supported when Dialogflow service is disconnected",
-          lifespan: 60000
-        })
-      }
-    }).catch(e => {
-      console.error(e);
-      messageQueue.push({
-        severity: "error",
-        title: "Backend Disconnected",
-        text: "System will not function until backend service is connected again",
-        lifespan: 60000
-      })
-    })
   }
 
   getSettings = async () => {
@@ -56,6 +35,7 @@ export default class AppService {
 
   mergeSettings = async (settings) => {
     let resp = await axios.post(`${this._baseUrl}/settings`, settings);
+    this.loadSettings(settings);
     return resp.data;
   }
 
@@ -63,9 +43,10 @@ export default class AppService {
     if(!settings){
       settings = await this.getSettings();
     }
-    //update neo4j connection
-    let host = settings.graph.host || window.location.hostname;
-    let port = settings.graph.port;
-    config.neovis.server_url = `bolt://${host}:${port}`;
+    //update generator settings
+    let {generator_batch_size} = settings;
+    if(generator_batch_size){
+      config.backend.generator.batchSize = parseInt(generator_batch_size);
+    }
   }
 }
