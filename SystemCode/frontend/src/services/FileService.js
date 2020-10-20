@@ -13,12 +13,12 @@ function readChunk(file, skip, take) {
 }
 
 export default class FileService{
-  constructor({baseUrl} = {}){
+  constructor({baseUrl, chunkSize = 128 * 1024} = {}){
     this._baseUrl = `${config.backend.baseUrl}/file`;
     if(baseUrl){
       this._baseUrl = `${baseUrl}/file`;
     }
-    this._ulChunkSize = 128 * 1024;
+    this._ulChunkSize = chunkSize;
   }
 
   upload = async (file, tracer) => {
@@ -43,7 +43,7 @@ export default class FileService{
       //update offset and progress
       offset += result.byteLength;
       if(tracer){
-        tracer({total: fileSize, current: offset});
+        tracer({total: fileSize, current: offset, file: {uuid, type}});
       }
     }
   }
