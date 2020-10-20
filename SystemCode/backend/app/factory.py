@@ -8,6 +8,7 @@ import tensorflow as tf
 
 from .context import set_obj
 from .images import save_image, images_dir, get_image_stats, set_image_stat
+from .files import upload_file, upload_file_chunk
 from .classifier import predict_real_fake
 from .generator import generate_image
 from .entities import set_setting, get_settings
@@ -134,6 +135,27 @@ def build_backend():
       return jsonify({'count': count})
     except KeyError as e:
       return jsonify({'error': f"missing {e.args[0]}"})
+  
+  # handle large file uploading (init)
+  @backend.route('/file/upload', methods=['POST'])
+  def file_upload_init():
+    req = request.get_json()
+    try:
+      file_uuid = req['uuid']
+      file_type = req['type']
+      upload_file(file_uuid, file_type)
+      return jsonify({'uuid': file_uuid})
+    except KeyError as e:
+      return jsonify({'error': f"missing {e.args[0]}"})
+
+  # handle large file uploading (chunk)
+  @backend.route('/file/upload/<uuid>/<offset>', methods=['POST'])
+  def file_upload_chunk(uuid, offset):
+    if not request.files:
+      return jsonify({'error': 'no files'})
+    chunk = request.files['chunk']
+    upload_file_chunk(uuid, offset, chunk.stream.read())
+    return jsonify({'uuid': uuid})
 
   return backend
 
