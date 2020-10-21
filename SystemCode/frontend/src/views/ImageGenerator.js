@@ -8,6 +8,7 @@ import {
   CloudDownloadOutlined
 } from '@ant-design/icons'
 
+import ModelService from '../services/ModelService'
 import ImageService, {generateImage} from '../services/ImageService'
 import ImageCard from '../components/image/ImageCard'
 import AffixHeader from '../components/layout/AffixHeader'
@@ -76,14 +77,18 @@ export default function ImageGenerator(){
   React.useEffect(() => {
     if(models.length < 1){
       //init model list
-      service.getStats().then(stats => {
-        let mdls = config.backend.generator.models.map(m => {
+      (async () => {
+        let stats = await service.getStats();
+        let mdls = await new ModelService().list('generator');
+        mdls = mdls.filter(m => {
+          return m.status === 1;
+        }).map(m => {
           let stat = stats.find(({model}) => model.name === m.name && model.version === m.version);
           let {likes=0, downloads=0} = (stat || {});
-          return {...m, likes, downloads};
+          return {...m, likes, downloads, enabled: true};
         });
         setModels(mdls);
-      });
+      })();
     }else{
       //handle model deselection
       let mdls = models.filter(m => m.enabled);
@@ -115,10 +120,10 @@ export default function ImageGenerator(){
   if(models.filter(m => m.enabled).length < 1){
     modelFixed = false;
   }
-  const modelList = models.map(({name, version, title, enabled, disabled, likes, downloads}, i) => {
+  const modelList = models.map(({name, version, label, enabled, disabled, likes, downloads}, i) => {
     return (
       <div key={i} className={classes.model}>
-        <div style={{marginBottom: 8}}>{title}{' '}<Switch checked={enabled} disabled={disabled || modelFixed} onChange={toggleModel(name, version)}/></div>
+        <div style={{marginBottom: 8}}>{label}{' '}<Switch checked={enabled} disabled={disabled || modelFixed} onChange={toggleModel(name, version)}/></div>
         <HeartTwoTone twoToneColor="#ff3629"/>{' '}{likes}
         <CloudDownloadOutlined style={{color: '#097bd9', marginLeft: 12}}/>{' '}{downloads}
       </div>

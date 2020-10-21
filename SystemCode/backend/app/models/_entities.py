@@ -8,7 +8,7 @@ from ._utils import model_path
 
 def get_models(type):
   with session_scope() as session:
-    models = session.query(Model).filter_by(type=type).all()
+    models = session.query(Model).filter_by(type=type).order_by(Model.name, Model.version).all()
     arr = []
     for m in models:
       arr.append({

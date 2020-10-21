@@ -65,21 +65,22 @@ export default function GeneratorModels({modelType = 'generator'} = {}){
     setModel({visible: false, key: uuidv4()});
   }
 
+  const sorter = prop => (a, b) => a[prop].localeCompare(b[prop]);
   const columns = [{
     title: 'Name',
     dataIndex: 'name',
     width: '20%',
-    sorter: true,
+    sorter: sorter('name'),
     render: name => config.backend.generator.models.filter(m => m.name === name)[0].label
   },{
     title: 'Version',
     dataIndex: 'version',
     width: '20%',
-    sorter: true
+    sorter: sorter('version')
   },{
     title: 'Display Label',
     dataIndex: 'label',
-    sorter: true
+    sorter: sorter('label')
   },{
     title: 'Enabled',
     dataIndex: 'status',
@@ -105,18 +106,18 @@ export default function GeneratorModels({modelType = 'generator'} = {}){
       >
         <Space className={classes.space} direction="vertical">
           <Typography.Text className={classes.text}>Name</Typography.Text>
-          <Select className={classes.select} defaultValue="" onChange={changeModel('name')}>
+          <Select className={classes.select} key={`${model.key}-name`} defaultValue="" onChange={changeModel('name')}>
             <Select.Option key={0} value="">Select ...</Select.Option>
             {config.backend.generator.models.map(m => (
               <Select.Option key={m.name} value={m.name}>{m.label}</Select.Option>
             ))}
           </Select>
           <Typography.Text className={classes.text}>Display Label</Typography.Text>
-          <Input className={classes.input} placeholder="Enter ..." onChange={e => changeModel('label')(e.target.value)}/>
+          <Input className={classes.input} key={`${model.key}-label`} placeholder="Enter ..." onChange={e => changeModel('label')(e.target.value)}/>
           {model.name? (
             <React.Fragment>
               <Typography.Text className={classes.text}>Model File</Typography.Text>
-              <FileUploader className={classes.uploader} key={model.key} accept={model.accept} onUploaded={changeModel('file')}/>
+              <FileUploader className={classes.uploader} key={`${model.key}-file`} accept={model.accept} onUploaded={changeModel('file')}/>
             </React.Fragment>
           ): null}
         </Space>
