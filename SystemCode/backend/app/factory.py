@@ -51,10 +51,7 @@ def build_backend():
   # get system settings
   @backend.route('/settings')
   def settings_get():
-    settings = {}
-    for s in get_settings():
-      settings[s.key] = s.value
-    return jsonify(settings)
+    return jsonify(get_settings())
 
   # set system settings
   @backend.route('/settings', methods=['POST'])
@@ -161,21 +158,7 @@ def build_backend():
   # get all models of type
   @backend.route('/model/<type>')
   def models_get(type):
-    models = get_models(type)
-    arr = []
-    for m in models:
-      arr.append({
-        'key': m.uuid,
-        'uuid': m.uuid,
-        'type': m.type,
-        'name': m.name,
-        'version': m.version,
-        'label': m.label,
-        'status': m.status,
-        'ensemble': m.ensemble,
-        'base_models': m.base_models
-      })
-    return jsonify(arr)
+    return jsonify(get_models(type))
 
   # adding model
   @backend.route('/model', methods=['POST'])

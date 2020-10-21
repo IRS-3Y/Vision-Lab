@@ -8,7 +8,7 @@ from importlib import import_module
 from sqlalchemy import func
 
 from .context import get_obj
-from .entities import get_session, Image
+from .entities import session_scope, Image
 
 
 def images_dir(*paths):
@@ -64,32 +64,28 @@ def plot_image(image_uuid, image_type = '.jpg', image_dir = 'origin'):
 
 
 def set_image_stat(image_uuid, image_type, model_name, model_version, stat_name, stat_delta = 1):
-  session = get_session()
-
-  image = session.query(Image).filter_by(uuid=image_uuid).first()
-  if image is None:
-    image = Image(uuid=image_uuid, image_type=image_type, model_name=model_name, model_version=model_version, likes=0, downloads=0)
-    session.add(image)
-  
-  if stat_name == 'likes':
-    image.likes = image.likes + stat_delta
-  elif stat_name == 'downloads':
-    image.downloads = image.downloads + stat_delta
-  
-  session.commit()
+  with session_scope() as session:
+    image = session.query(Image).filter_by(uuid=image_uuid).first()
+    if image is None:
+      image = Image(uuid=image_uuid, image_type=image_type, model_name=model_name, model_version=model_version, likes=0, downloads=0)
+      session.add(image)
+    
+    if stat_name == 'likes':
+      image.likes = image.likes + stat_delta
+    elif stat_name == 'downloads':
+      image.downloads = image.downloads + stat_delta
 
 
 def get_image_stats():
-  session = get_session()
+  with session_scope() as session:
+    stats = []
+    likes = func.sum(Image.likes).label('likes')
+    downloads = func.sum(Image.downloads).label('downloads')
+    model_name = Image.model_name.label('name')
+    model_version = Image.model_version.label('version')
 
-  stats = []
-  likes = func.sum(Image.likes).label('likes')
-  downloads = func.sum(Image.downloads).label('downloads')
-  model_name = Image.model_name.label('name')
-  model_version = Image.model_version.label('version')
-
-  for r in session.query(likes, downloads, model_name, model_version).group_by(model_name, model_version).all():
-    model = {'name': r.name, 'version': r.version}
-    stats.append({'model': model, 'likes': int(r.likes), 'downloads': int(r.downloads)})
-  
-  return stats
+    for r in session.query(likes, downloads, model_name, model_version).group_by(model_name, model_version).all():
+      model = {'name': r.name, 'version': r.version}
+      stats.append({'model': model, 'likes': int(r.likes), 'downloads': int(r.downloads)})
+    
+    return stats

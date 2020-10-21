@@ -1,3 +1,5 @@
+import os
+from contextlib import contextmanager
 from sqlalchemy import create_engine, Column, Integer, String, Text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -7,7 +9,11 @@ from . import context
 def get_engine(**args):
   engine = context.get_obj('db_engine')
   if engine is None:
-    engine = create_engine('mysql+mysqldb://root:password1@localhost:3305/vlab', **args)
+    host = os.getenv('DB_HOST', 'localhost')
+    port = os.getenv('DB_PORT', '3306')
+    username = os.getenv('DB_USERNAME', 'root')
+    password = os.getenv('DB_PASSWORD', 'password1')
+    engine = create_engine(f'mysql+mysqldb://{username}:{password}@{host}:{port}/vlab', **args)
     context.set_obj('db_engine', engine)
   return engine
 
@@ -17,6 +23,18 @@ def get_session():
   if Session is None:
     Session = sessionmaker(bind=get_engine())
   return Session()
+
+@contextmanager
+def session_scope():
+  session = get_session()
+  try:
+    yield session
+    session.commit()
+  except:
+    session.rollback()
+    raise
+  finally:
+    session.close()
 
 
 Base = declarative_base()
@@ -62,41 +80,36 @@ class Image(Base):
     return f"<Image(uuid='{self.uuid}')>"
 
 
-def set_setting(key, value, session = None):
-  commit = False
-  if session is None:
-    session = get_session()
-    commit = True
-  
-  entity = session.query(Setting).filter_by(key=key).first()
-  if entity is None:
-    session.add(Setting(key=key, value=value))
-  else:
-    entity.value = value
-  
-  if commit:
-    session.commit()
+def set_setting(key, value):
+  with session_scope() as session:
+    entity = session.query(Setting).filter_by(key=key).first()
+    if entity is None:
+      session.add(Setting(key=key, value=value))
+    else:
+      entity.value = value
 
 
-def get_setting(key, default_value = None, session = None):
-  if session is None:
-    session = get_session()
-  
-  entity = session.query(Setting).filter_by(key=key).first()
-  if entity is None:
-    return default_value
-  else:
-    return entity.value
+def get_setting(key, default_value = None):
+  with session_scope() as session:
+    entity = session.query(Setting).filter_by(key=key).first()
+    if entity is None:
+      return default_value
+    else:
+      return entity.value
 
 
-def get_settings(keys = None, session = None):
-  if session is None:
-    session = get_session()
-  
-  if keys is None or len(keys) == 0:
-    return session.query(Setting).all()
-  else:
-    return session.query(Setting).filter(Setting.key.in_(keys))
+def get_settings(keys = None):
+  with session_scope() as session:
+    entities = []
+    if keys is None or len(keys) == 0:
+      entities = session.query(Setting).all()
+    else:
+      entities = session.query(Setting).filter(Setting.key.in_(keys))
+
+    settings = {}
+    for s in entities:
+      settings[s.key] = s.value
+    return settings
 
 
 _init = False
