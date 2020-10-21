@@ -1,10 +1,13 @@
 const backend = {
   baseUrl: '/backend',
   detector: {
-    model: {
-      name: 'resnet50v2',
-      version: 'default'
-    },
+    classes: [{
+      name: 'real',
+      label: 'Real Photo'
+    },{
+      name: 'fake',
+      label: 'AI-Generated Image'
+    }],
     models: [{
       name: 'resnet50v2',
       label: 'ResNet50 v2',

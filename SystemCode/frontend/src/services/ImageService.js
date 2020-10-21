@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import axios from 'axios';
 import {messageQueue} from './AppService';
+import ModelService from './ModelService'
 import config from '../config';
 import {getBackend, isValidModel} from '../adaptor'
 
@@ -31,18 +32,59 @@ export default class ImageService {
     return resp.data;
   }
 
-  detect = async (image) => {
-    let result = await this.classify({
-      type: 'real_fake', 
-      image,
-      model: config.backend.detector.model
+  detect = async (image, tracer) => {
+    let models = await new ModelService().list('detector');
+    models = models.filter(m => m.status === 1);
+    if(models.length < 1){
+      messageQueue.push({
+        severity: "warning",
+        title: "Model Not Selected",
+        text: "Please enable at least one model for image detector",
+        lifespan: 5000
+      });
+      return {info: null};
+    }
+    //test each model one by one
+    let results = [];
+    let total = models.length;
+    let current = 0;
+    if(tracer){
+      tracer({total, current});
+    }
+    while(models.length){
+      let model = models.shift();
+      let result = await this.classify({type: 'real_fake', image, model});
+      results.push({result, model});
+      current += 1;
+      if(tracer){
+        tracer({total, current});
+      }
+    }
+    //aggregate results to determine final result
+    let classes = config.backend.detector.classes;
+    let result = {};
+    classes.forEach(({name}) => result[name] = 0.0);
+    results.forEach(({result: r}) => {
+      classes.forEach(({name}) => {
+        result[name] = result[name] + r[name];
+        r[name] = r[name].toFixed(4);
+      });
     });
+    let max = 0.0;
+    classes.forEach(({name}) => {
+      result[name] = result[name] / results.length
+      if(result[name] > max){
+        max = result[name];
+        result.class = name;
+      }
+      result[name] = result[name].toFixed(4);
+    });
+    result.classLabel = classes.filter(c => c.name === result.class)[0].label;
+
+    console.debug({results, result});
     return {
-      image, result,
-      info: [
-        `I think this is a ${result.class} photo.`,
-        `real: ${result.real.toFixed(4)} fake: ${result.fake.toFixed(4)}`
-      ]
+      image, results, result,
+      info: `I think this is ${result.classLabel}.`
     }
   }
 
