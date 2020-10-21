@@ -4,7 +4,12 @@ const backend = {
     model: {
       name: 'resnet50v2',
       version: 'default'
-    }
+    },
+    models: [{
+      name: 'resnet50v2',
+      label: 'ResNet50 v2',
+      accept: ['.h5']
+    }]
   },
   generator: {
     models: [{
@@ -18,7 +23,10 @@ const backend = {
 };
 
 function getModel({name}){
-  return backend.generator.models.filter(m => m.name === name)[0];
+  return [
+    ...backend.generator.models,
+    ...backend.detector.models
+  ].filter(m => m.name === name)[0];
 }
 
 export {backend, getModel};

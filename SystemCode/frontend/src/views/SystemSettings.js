@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core'
 import { Tabs, Typography, Space, Slider } from 'antd'
 import AppService from '../services/AppService'
 import AffixHeader from '../components/layout/AffixHeader'
-import GeneratorModels from './GeneratorModels'
+import ModelsManager from './ModelsManager'
 import config from '../config'
 
 const app = new AppService();
@@ -47,10 +47,14 @@ export default function SystemSettings(){
             <Typography.Text className={classes.text}>Number of images generated per batch</Typography.Text>
             <Slider className={classes.slider} min={1} max={20} defaultValue={settings.generator_batch_size} onAfterChange={changeSetting('generator_batch_size')}/>
             <Typography.Text className={classes.text}>Model configurations</Typography.Text>
-            <GeneratorModels/>
+            <ModelsManager modelType="generator"/>
           </Space>
         </Tabs.TabPane>
         <Tabs.TabPane tab="Image Detector" key="2">
+          <Space className={classes.space} direction="vertical">
+            <Typography.Text className={classes.text}>Model configurations</Typography.Text>
+            <ModelsManager modelType="detector"/>
+          </Space>
         </Tabs.TabPane>
       </Tabs>
     </div>

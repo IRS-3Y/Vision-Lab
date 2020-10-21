@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function GeneratorModels({modelType = 'generator'} = {}){
+export default function ModelsManager({modelType}){
   const classes = useStyles();
 
   let [models, setModels] = React.useState([]);
@@ -51,11 +51,12 @@ export default function GeneratorModels({modelType = 'generator'} = {}){
 
   let [model, setModel] = React.useState({visible: false, key: uuidv4()});
   let changeModel = prop => value => {
-    let accept = [];
     if(prop === 'name' && value){
-      accept = config.backend.generator.models.filter(m => m.name === value)[0].accept;
+      let accept = config.getModel({name: value}).accept;
+      setModel(model => ({...model, accept, [prop]: value}));
+    }else{
+      setModel(model => ({...model, [prop]: value}));
     }
-    setModel(model => ({...model, accept, [prop]: value}));
   }
   let saveModel = async () => {
     let {name, label, file} = model;
@@ -72,7 +73,7 @@ export default function GeneratorModels({modelType = 'generator'} = {}){
     dataIndex: 'name',
     width: '20%',
     sorter: sorter('name'),
-    render: name => config.backend.generator.models.filter(m => m.name === name)[0].label
+    render: name => config.getModel({name}).label
   },{
     title: 'Version',
     dataIndex: 'version',
@@ -109,7 +110,7 @@ export default function GeneratorModels({modelType = 'generator'} = {}){
           <Typography.Text className={classes.text}>Name</Typography.Text>
           <Select className={classes.select} key={`${model.key}-name`} defaultValue="" onChange={changeModel('name')}>
             <Select.Option key={0} value="">Select ...</Select.Option>
-            {config.backend.generator.models.map(m => (
+            {config.backend[modelType].models.map(m => (
               <Select.Option key={m.name} value={m.name}>{m.label}</Select.Option>
             ))}
           </Select>
