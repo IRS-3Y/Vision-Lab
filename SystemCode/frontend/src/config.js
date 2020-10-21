@@ -10,11 +10,16 @@ const backend = {
     models: [{
       name: 'stylegan2',
       label: 'StyleGAN2',
-      accept: ['.pkl']
+      accept: ['.pkl'],
+      backend: 'tf1'
     }],
     batchSize: 10
   }
 };
 
-export {backend};
-export default {backend};
+function getModel({name}){
+  return backend.generator.models.filter(m => m.name === name)[0];
+}
+
+export {backend, getModel};
+export default {backend, getModel};

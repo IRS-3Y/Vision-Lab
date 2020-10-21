@@ -44,7 +44,8 @@ def build_backend():
     return jsonify({
       'status': 'ok',
       'tensorflow': {
-        'version': tf.__version__
+        'version': tf.__version__,
+        'gpu': tf.config.list_physical_devices('GPU') if tf.__version__.startswith('2.') else tf.test.gpu_device_name()
       }
     })
 

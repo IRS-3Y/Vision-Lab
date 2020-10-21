@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { makeStyles } from '@material-ui/core'
 import { Table, Button, Modal, Space, Typography, Select, Input, Switch } from 'antd'
 import ModelService from '../services/ModelService'
+import FileService from '../services/FileService'
 import FileUploader from '../components/file/FileUploader'
 import config from '../config'
 
@@ -59,7 +60,7 @@ export default function GeneratorModels({modelType = 'generator'} = {}){
   let saveModel = async () => {
     let {name, label, file} = model;
     if(name && label && file){
-      await service.create({type: modelType, name, label, file});
+      await service.forModel(model).create({type: modelType, name, label, file});
       await refresh();
     }
     setModel({visible: false, key: uuidv4()});
@@ -117,7 +118,9 @@ export default function GeneratorModels({modelType = 'generator'} = {}){
           {model.name? (
             <React.Fragment>
               <Typography.Text className={classes.text}>Model File</Typography.Text>
-              <FileUploader className={classes.uploader} key={`${model.key}-file`} accept={model.accept} onUploaded={changeModel('file')}/>
+              <FileUploader className={classes.uploader} key={`${model.key}-file`} 
+                accept={model.accept} onUploaded={changeModel('file')}
+                service={new FileService({chunkSize: 1024 * 1024}).forModel(model)}/>
             </React.Fragment>
           ): null}
         </Space>

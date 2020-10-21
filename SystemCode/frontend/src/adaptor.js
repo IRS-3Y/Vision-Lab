@@ -1,6 +1,12 @@
 import axios from 'axios'
 
 import config from './config'
+import {messageQueue} from './services/AppService'
+
+const _backends = {}
+export function getBackend(name){
+  return _backends[name] || {};
+}
 
 export async function findBackend(test){
   const baseUrl = config.backend.baseUrl;
@@ -25,3 +31,36 @@ export async function findBackend(test){
   }
   throw new Error('cannot find valid backend');
 }
+
+export async function findBackendTF1(){
+  try{
+    let backend = await findBackend(({tensorflow: tf}) => {
+      return tf.version.startsWith('1.') && tf.gpu
+    })
+    console.info(`Found tensorflow-v${backend.tensorflow.version} backend on: ${backend.baseUrl}`);
+    _backends.tf1 = backend;
+  }
+  catch(err) {
+    console.error(err);
+    messageQueue.push({
+      severity: "warning",
+      title: "TensorFlow v1 Backend Disconnected",
+      text: "StyleGAN is NOT supported when TensorFlow v1 Backend is disconnected",
+      lifespan: 60000
+    });
+    _backends.tf1 = {};
+  }
+}
+
+export function isValidModel(model){
+  let {backend} = config.getModel(model);
+  if(backend){
+    //requires specific backend
+    return _backends[backend] && _backends[backend].baseUrl;
+  }else{
+    return true;
+  }
+}
+
+//test on loading
+findBackendTF1();

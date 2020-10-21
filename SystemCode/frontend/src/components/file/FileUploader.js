@@ -5,8 +5,6 @@ import {Progress} from 'antd'
 
 import FileService from '../../services/FileService'
 
-const service = new FileService({chunkSize: 1024 * 1024});
-
 const useStyles = makeStyles(theme => ({
   dropzone: {
     minHeight: 100,
@@ -18,7 +16,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default function FileUploader({
-  className, accept = [], maxSize = 2000000000, onUploaded
+  className, accept = [], maxSize = 2000000000, onUploaded,
+  service = new FileService()
 }){
   const classes = useStyles();
 

@@ -1,9 +1,13 @@
 import axios from 'axios'
 import config from '../config'
+import {getBackend} from '../adaptor'
 
 export default class ModelService{
-  constructor(){
+  constructor({baseUrl} = {}){
     this._baseUrl = `${config.backend.baseUrl}/model`;
+    if(baseUrl){
+      this._baseUrl = `${baseUrl}/model`;
+    }
   }
 
   list = async (type) => {
@@ -24,5 +28,18 @@ export default class ModelService{
   delete = async (uuid) => {
     let resp = await axios.delete(`${this._baseUrl}/${uuid}`);
     return resp.data;
+  }
+
+  forModel = model => {
+    let {backend} = config.getModel(model);
+    if(!backend){
+      return this;
+    }
+    //requires specific backend
+    let {baseUrl} = getBackend(backend);
+    if(!baseUrl){
+      throw new Error(`no backend: ${backend}`);
+    }
+    return new ModelService({baseUrl});
   }
 }

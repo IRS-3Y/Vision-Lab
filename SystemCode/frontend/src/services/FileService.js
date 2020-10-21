@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {v4 as uuidv4} from 'uuid'
 import config from '../config'
+import {getBackend} from '../adaptor'
 
 function readChunk(file, skip, take) {
   return new Promise((resolve, reject) => {
@@ -46,5 +47,18 @@ export default class FileService{
         tracer({total: fileSize, current: offset, file: {uuid, type}});
       }
     }
+  }
+
+  forModel = model => {
+    let {backend} = config.getModel(model);
+    if(!backend){
+      return this;
+    }
+    //requires specific backend
+    let {baseUrl} = getBackend(backend);
+    if(!baseUrl){
+      throw new Error(`no backend: ${backend}`);
+    }
+    return new FileService({baseUrl, chunkSize: this._ulChunkSize});
   }
 }

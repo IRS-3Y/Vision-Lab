@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons'
 
 import ModelService from '../services/ModelService'
-import ImageService, {generateImage} from '../services/ImageService'
+import ImageService from '../services/ImageService'
 import ImageCard from '../components/image/ImageCard'
 import AffixHeader from '../components/layout/AffixHeader'
 import config from '../config'
@@ -106,7 +106,7 @@ export default function ImageGenerator(){
   React.useEffect(() => {
     let active = true;
     if(images.length < limit){
-      generateImage(models.filter(m => m.enabled)).then(image => {
+      service.generateImage(models.filter(m => m.enabled)).then(image => {
         if(active && image){
           setImages([...images, image]);
         }
