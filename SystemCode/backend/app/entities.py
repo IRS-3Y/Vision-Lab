@@ -31,6 +31,22 @@ class Setting(Base):
   def __repr__(self):
     return f"<Setting(key='{self.key}')>"
 
+class Model(Base):
+  __tablename__ = 'models'
+
+  id = Column(Integer, primary_key=True)
+  uuid = Column(String(36))
+  type = Column(String(255))
+  name = Column(String(255))
+  version = Column(String(255))
+  label = Column(String(255))
+  status = Column(Integer)
+  ensemble = Column(Integer)
+  base_models = Column(String(255))
+
+  def __repr__(self):
+    return f"<Model(uuid='{self.uuid}')>"
+
 class Image(Base):
   __tablename__ = 'images'
 

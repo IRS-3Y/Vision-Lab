@@ -7,7 +7,7 @@ const backend = {
     }
   },
   generator: {
-    models: [{
+    models_: [{
       title: 'Asian Face',
       name: 'stylegan2',
       version: 'generator_yellow-stylegan2-config-f',
@@ -24,6 +24,11 @@ const backend = {
       title: 'Cartoon Face',
       name: 'stylegan2',
       version: 'skylion-stylegan2-animeportraits'
+    }],
+    models: [{
+      name: 'stylegan2',
+      label: 'StyleGAN2',
+      accept: ['.pkl']
     }],
     batchSize: 10
   }

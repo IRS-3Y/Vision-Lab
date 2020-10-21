@@ -8,7 +8,8 @@ import tensorflow as tf
 
 from .context import set_obj
 from .images import save_image, images_dir, get_image_stats, set_image_stat
-from .files import upload_file, upload_file_chunk
+from .files import upload_file, upload_file_chunk, files_dir
+from .models import upload_model, delete_model, get_models, update_model
 from .classifier import predict_real_fake
 from .generator import generate_image
 from .entities import set_setting, get_settings
@@ -156,6 +157,51 @@ def build_backend():
     chunk = request.files['chunk']
     upload_file_chunk(uuid, offset, chunk.stream.read())
     return jsonify({'uuid': uuid})
+
+  # get all models of type
+  @backend.route('/model/<type>')
+  def models_get(type):
+    models = get_models(type)
+    arr = []
+    for m in models:
+      arr.append({
+        'key': m.uuid,
+        'uuid': m.uuid,
+        'type': m.type,
+        'name': m.name,
+        'version': m.version,
+        'label': m.label,
+        'status': m.status,
+        'ensemble': m.ensemble,
+        'base_models': m.base_models
+      })
+    return jsonify(arr)
+
+  # adding model
+  @backend.route('/model', methods=['POST'])
+  def model_add():
+    req = request.get_json()
+    try:
+      filename = f"{req['file']['uuid']}{req['file']['type']}"
+      filepath = os.path.join(files_dir('upload'), filename)
+
+      type = req['type']
+      name = req['name']
+      label = req['label']
+      result = upload_model(type, name, label, filepath)
+      return jsonify(result)
+    except KeyError as e:
+      return jsonify({'error': f"missing {e.args[0]}"})
+  
+  # updating model status
+  @backend.route('/model/<uuid>/status/<status>', methods=['PATCH'])
+  def model_update_status(uuid, status):
+    return jsonify(update_model(uuid, status=status))
+  
+  # deleting model
+  @backend.route('/model/<uuid>', methods=['DELETE'])
+  def model_delete(uuid):
+    return jsonify(delete_model(uuid))
 
   return backend
 
