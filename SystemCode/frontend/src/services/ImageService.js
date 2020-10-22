@@ -53,7 +53,7 @@ export default class ImageService {
     }
     while(models.length){
       let model = models.shift();
-      let result = await this.classify({type: 'real_fake', image, model});
+      let result = await this.classify({type: 'face', image, model});
       results.push({result, model});
       current += 1;
       if(tracer){

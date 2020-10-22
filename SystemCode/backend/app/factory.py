@@ -10,7 +10,7 @@ from .context import set_obj
 from .images import save_image, images_dir, get_image_stats, set_image_stat
 from .files import upload_file, upload_file_chunk, files_dir
 from .models import upload_model, delete_model, get_models, update_model
-from .classifier import predict_real_fake
+from .classifier import predict_face
 from .generator import generate_image
 from .entities import set_setting, get_settings
 
@@ -88,7 +88,7 @@ def build_backend():
     req = request.get_json()
     usecase = req['type']
 
-    if(usecase == 'real_fake'):
+    if(usecase == 'face'):
       img_uuid = req['image']['uuid']
       img_type = req['image']['type']
 
@@ -98,7 +98,7 @@ def build_backend():
         mdl_name = req['model']['name']
         mdl_version = req['model']['version']
       
-      result = predict_real_fake(img_uuid, img_type, mdl_name, mdl_version)
+      result = predict_face(img_uuid, img_type, mdl_name, mdl_version)
       return jsonify(result)
     else:
       return jsonify({'error': 'invalid type'})
