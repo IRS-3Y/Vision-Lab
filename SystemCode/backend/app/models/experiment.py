@@ -14,7 +14,7 @@ def load_model(model_version = 'default'):
   return _utils.load_model(MODEL_NAME, model_version)
 
 
-def build_model():
+def build_model(classes = 2):
   model = Sequential()
   model.add(Input(shape=(IMAGE_SIZE, IMAGE_SIZE, 3)))
   model.add(Rescaling(1./255))
@@ -29,7 +29,7 @@ def build_model():
   model.add(Dropout(0.2))
   model.add(Flatten())
   model.add(Dense(256, activation='relu'))
-  model.add(Dense(2, activation='softmax'))
+  model.add(Dense(classes, activation='softmax'))
   model.compile(loss='categorical_crossentropy', metrics=['accuracy'])
   return model
 

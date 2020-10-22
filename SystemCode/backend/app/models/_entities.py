@@ -1,9 +1,8 @@
 import os
 from uuid import uuid4
-from datetime import datetime
 
 from ..entities import session_scope, Model
-from ._utils import model_path
+from ._utils import model_path, new_model_version
 
 
 def get_models(type):
@@ -53,7 +52,7 @@ def delete_model(uuid):
 
 def upload_model(type, name, label, filepath):
   uuid = uuid4()
-  version = datetime.now().strftime('%Y%m%d_%H%M%S')
+  version = new_model_version()
 
   filetype = f".{filepath.split('.')[-1]}"
   modelpath = model_path(name, version, file_ext=filetype)

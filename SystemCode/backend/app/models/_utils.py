@@ -2,6 +2,7 @@
 Model related utilities
 '''
 import os
+from datetime import datetime
 import tensorflow as tf
 
 from ..context import get_obj
@@ -9,6 +10,10 @@ from ..images import images_dir
 
 
 _model_cache = {}
+
+
+def new_model_version():
+  return datetime.now().strftime('%Y%m%d_%H%M%S')
 
 
 def models_dir(*paths):

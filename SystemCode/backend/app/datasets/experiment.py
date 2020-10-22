@@ -2,7 +2,7 @@ from . import _utils
 
 
 DATASET_NAME = 'experiment'
-CLASS_NAMES = ['real','fake']
+CLASS_NAMES = ['human','human_gen','anime','anime_gen']
 
 
 def load_dataset(**kwargs):
