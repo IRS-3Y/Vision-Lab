@@ -86,6 +86,11 @@ const backend = {
       label: 'StyleGAN2',
       accept: ['.pkl'],
       backend: 'tf1'
+    },{
+      name: 'dcgan_tl',
+      label: 'DCGAN',
+      accept: ['.npz'],
+      backend: 'tf22'
     }],
     batchSize: 10
   }

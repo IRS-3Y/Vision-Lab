@@ -52,6 +52,26 @@ export async function findBackendTF1(){
   }
 }
 
+export async function findBackendTF22(){
+  try{
+    let backend = await findBackend(({tensorflow: tf}) => {
+      return tf.version.startsWith('2.2.')
+    })
+    console.info(`Found tensorflow-v${backend.tensorflow.version} backend on: ${backend.baseUrl}`);
+    _backends.tf22 = backend;
+  }
+  catch(err) {
+    console.error(err);
+    messageQueue.push({
+      severity: "warning",
+      title: "TensorFlow v2.2 Backend Disconnected",
+      text: "DCGAN is NOT supported when TensorFlow v2.2 Backend is disconnected",
+      lifespan: 60000
+    });
+    _backends.tf22 = {};
+  }
+}
+
 export function isValidModel(model){
   let {backend} = config.getModel(model);
   if(backend){
@@ -64,3 +84,4 @@ export function isValidModel(model){
 
 //test on loading
 findBackendTF1();
+findBackendTF22();
