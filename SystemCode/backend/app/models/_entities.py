@@ -53,10 +53,11 @@ def delete_model(uuid):
 def upload_model(type, name, label, filepath):
   uuid = uuid4()
   version = new_model_version()
+  ensemble = 1 if name.startswith('ensemble') else 0
 
   filetype = f".{filepath.split('.')[-1]}"
   modelpath = model_path(name, version, file_ext=filetype)
   os.rename(filepath, modelpath)
 
-  create_model(uuid=uuid, type=type, name=name, version=version, label=label, status=0, ensemble=0)
+  create_model(uuid=uuid, type=type, name=name, version=version, label=label, status=0, ensemble=ensemble)
   return {'uuid': uuid, 'type': type, 'name': name, 'version': version, 'label': label}
