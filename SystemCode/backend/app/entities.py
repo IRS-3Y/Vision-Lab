@@ -118,7 +118,10 @@ def init(debug = False):
   if _init:
     return
   _init = True
-
-  engine = get_engine(echo = debug)
-  Base.metadata.create_all(engine)
+  try:
+    engine = get_engine(echo = debug)
+    Base.metadata.create_all(engine)
+  except:
+    _init = False
+    raise
 
