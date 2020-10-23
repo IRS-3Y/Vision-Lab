@@ -1,12 +1,13 @@
 import numpy as np
 import os
 from uuid import uuid4
+import cv2
 import tensorflow as tf
 import tensorlayer as tl
 from tensorlayer.layers import Input, Dense, DeConv2d, Reshape, BatchNorm2d, Conv2d, Flatten
 
 from .._utils import model_path, images_dir
-from . import MODEL_NAME
+from . import MODEL_NAME, IMAGE_RESIZE
 
 Z_DIM = 100
 
@@ -47,11 +48,17 @@ def load_generator(model_version = 'default'):
 
 def generate_image(model_version = 'default'):
   uuid = uuid4()
-  image_dir = images_dir(MODEL_NAME)
+  imgpath = os.path.join(images_dir(MODEL_NAME), f"{uuid}.png")
 
+  # generated image from random noise vector
   z = np.random.normal(loc=0.0, scale=1.0, size=[1, Z_DIM]).astype(np.float32)
   img = load_generator(model_version)(z)[0]
-  tl.visualize.save_image(img, os.path.join(image_dir, f"{uuid}.png"))
+  tl.visualize.save_image(img, imgpath)
+
+  # resize (enlarge) image
+  img = cv2.imread(imgpath, cv2.IMREAD_UNCHANGED)
+  img = cv2.resize(img, (IMAGE_RESIZE, IMAGE_RESIZE))
+  cv2.imwrite(imgpath, img)
 
   model = {'name': MODEL_NAME, 'version': model_version}
   return {'uuid': uuid, 'type': '.png', 'model': model}
