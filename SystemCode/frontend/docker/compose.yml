@@ -12,11 +12,27 @@ services:
     depends_on:
       - backend
   backend:
-    image: "vlab-backend-base:dev"
+    image: "vlab-backend-core:dev"
     environment:
       DB_HOST: database
     ports:
       - "5100:5000"
+    depends_on:
+      - database
+  backend_stylegan:
+    image: "vlab-backend-stylegan:dev"
+    environment:
+      DB_HOST: database
+    ports:
+      - "5001:5000"
+    depends_on:
+      - database
+  backend_dcgan:
+    image: "vlab-backend-dcgan:dev"
+    environment:
+      DB_HOST: database
+    ports:
+      - "5002:5000"
     depends_on:
       - database
   database:

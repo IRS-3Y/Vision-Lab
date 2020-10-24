@@ -80,6 +80,11 @@ class Image(Base):
     return f"<Image(uuid='{self.uuid}')>"
 
 
+def count(entity_type):
+  with session_scope() as session:
+    return session.query(entity_type).count()
+
+
 def set_setting(key, value):
   with session_scope() as session:
     entity = session.query(Setting).filter_by(key=key).first()
