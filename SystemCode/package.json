@@ -1,0 +1,29 @@
+{
+  "name": "vision-lab",
+  "version": "0.1.0",
+  "description": "Vision Lab",
+  "private": true,
+  "dependencies": {},
+  "scripts": {
+    "postinstall": "run-s install:*",
+    "install:backend": "cd ./backend && npm install",
+    "install:frontend": "cd ./frontend && npm install",
+    "build": "run-s build:* tag:*",
+    "build:backend": "cd ./backend && npm run build",
+    "build:frontend": "cd ./frontend && npm run build",
+    "tag:backend-core": "docker tag vlab-backend-core:dev irs3y/vlab-backend-core:latest",
+    "tag:backend-stylegan": "docker tag vlab-backend-stylegan:dev irs3y/vlab-backend-stylegan:latest",
+    "tag:backend-dcgan": "docker tag vlab-backend-dcgan:dev irs3y/vlab-backend-dcgan:latest",
+    "tag:frontend": "docker tag vlab-frontend:dev irs3y/vlab-frontend:latest",
+    "start": "docker-compose -p vlab -f ./vlab-compose.yml up -d",
+    "stop": "docker-compose -p vlab -f ./vlab-compose.yml down -v",
+    "docker:publish": "run-s docker:publish:*",
+    "docker:publish:frontend": "docker push irs3y/vlab-frontend",
+    "docker:publish:backend-core": "docker push irs3y/vlab-backend-core",
+    "docker:publish:backend-stylegan": "docker push irs3y/vlab-backend-stylegan",
+    "docker:publish:backend-dcgan": "docker push irs3y/vlab-backend-dcgan"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
