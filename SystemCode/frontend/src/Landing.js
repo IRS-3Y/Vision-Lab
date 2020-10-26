@@ -88,7 +88,7 @@ export default function Landing(){
               </Tooltip>
             </Link>
             <Tooltip title="Project Site">
-              <IconButton href="/" target="_blank">
+              <IconButton href="https://github.com/IRS-3Y/Vision-Lab" target="_blank">
                 <GitHubIcon className={classes.white}/>
               </IconButton>
             </Tooltip>
