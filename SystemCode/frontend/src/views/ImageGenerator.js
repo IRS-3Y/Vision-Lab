@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     flexFlow: 'row wrap'
   },
   model:{
-    margin: theme.spacing(1,2,1,0),
+    margin: theme.spacing(1,2,2,0),
     width: 200,
     fontWeight: 500
   },
@@ -120,10 +120,11 @@ export default function ImageGenerator(){
   if(models.filter(m => m.enabled).length < 1){
     modelFixed = false;
   }
-  const modelList = models.map(({name, version, label, enabled, disabled, likes, downloads}, i) => {
+  const modelList = models.sort((a, b) => a.label.localeCompare(b.label)).map(({name, version, label, enabled, disabled, likes, downloads}, i) => {
     return (
       <div key={i} className={classes.model}>
-        <div style={{marginBottom: 8}}>{label}{' '}<Switch checked={enabled} disabled={disabled || modelFixed} onChange={toggleModel(name, version)}/></div>
+        <div style={{marginBottom: 8}}>{label}</div>
+        <Switch style={{marginRight: 16}} checked={enabled} disabled={disabled || modelFixed} onChange={toggleModel(name, version)}/>{' '}
         <HeartTwoTone twoToneColor="#ff3629"/>{' '}{likes}
         <CloudDownloadOutlined style={{color: '#097bd9', marginLeft: 12}}/>{' '}{downloads}
       </div>

@@ -13,7 +13,7 @@ if count(Model) == 0:
   create_model(uuid=uuid4(), type='generator', name='stylegan2', version='preload_asian_face', label='Asian Face (StyleGAN)', status=1, ensemble=0)
   create_model(uuid=uuid4(), type='generator', name='stylegan2', version='preload_cartoon_face', label='Cartoon Face (StyleGAN)', status=1, ensemble=0)
   create_model(uuid=uuid4(), type='generator', name='stylegan2', version='preload_celebrity_face', label='Celebrity Face (StyleGAN)', status=1, ensemble=0)
-  create_model(uuid=uuid4(), type='generator', name='stylegan2', version='preload_online_celebrity', label='Online Celebrity (StyleGAN)', status=1, ensemble=0)
+  create_model(uuid=uuid4(), type='generator', name='stylegan2', version='preload_online_celebrity', label='Internet Celebrity (StyleGAN)', status=1, ensemble=0)
   create_model(uuid=uuid4(), type='generator', name='dcgan_tl', version='preload_human_face', label='Human Face (DCGAN)', status=1, ensemble=0)
   create_model(uuid=uuid4(), type='generator', name='dcgan_tl', version='preload_cartoon_face', label='Cartoon Face (DCGAN)', status=1, ensemble=0)
 

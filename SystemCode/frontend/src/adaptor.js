@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import axios from 'axios'
 
 import config from './config'
@@ -10,17 +11,14 @@ export function getBackend(name){
 
 export async function findBackend(test){
   const baseUrl = config.backend.baseUrl;
-  try{
-    let resp = await axios.get(`${baseUrl}/status`);
-    if(!test || test(resp.data)){
-      return {...resp.data, baseUrl};
-    }
-  }catch(err){
-    console.debug(err);
+  const testUrls = [baseUrl];
+  _.range(5001, 5004).forEach(i => testUrls.push(`http://${window.location.hostname}:${i}${baseUrl}`))
+  if('localhost' !== window.location.hostname){
+    _.range(5001, 5004).forEach(i => testUrls.push(`http://localhost:${i}${baseUrl}`))
   }
-  for(let i=5001; i<5004; i++){
+  for(let i=0; i<testUrls.length; i++){
     try{
-      let testUrl = `http://${window.location.hostname}:${i}${baseUrl}`
+      let testUrl = testUrls[i];
       let resp = await axios.get(`${testUrl}/status`);
       if(!test || test(resp.data)){
         return {...resp.data, baseUrl: testUrl};
