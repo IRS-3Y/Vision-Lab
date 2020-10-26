@@ -12,25 +12,11 @@ services:
     depends_on:
       - backend
   backend:
-    runtime: nvidia
     image: "irs3y/vlab-backend-core"
     environment:
       DB_HOST: database
-      TF_MIN_GPU_MULTIPROCESSOR_COUNT: 4
-      TF_FORCE_GPU_ALLOW_GROWTH: "true"
     ports:
       - "5000:5000"
-    depends_on:
-      - database
-  backend_stylegan:
-    runtime: nvidia
-    image: "irs3y/vlab-backend-stylegan"
-    environment:
-      DB_HOST: database
-      TF_MIN_GPU_MULTIPROCESSOR_COUNT: 4
-      TF_FORCE_GPU_ALLOW_GROWTH: "true"
-    ports:
-      - "5001:5000"
     depends_on:
       - database
   backend_dcgan:
