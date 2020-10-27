@@ -1,6 +1,6 @@
 import os
 from contextlib import contextmanager
-from sqlalchemy import create_engine, Column, Integer, String, Text
+from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -60,7 +60,7 @@ class Model(Base):
   label = Column(String(255))
   status = Column(Integer)
   ensemble = Column(Integer)
-  base_models = Column(String(255))
+  base_models = Column(Text)
 
   def __repr__(self):
     return f"<Model(uuid='{self.uuid}')>"
@@ -77,6 +77,27 @@ class Dataset(Base):
 
   def __repr__(self):
     return f"<Dataset(uuid='{self.uuid}')>"
+
+class Training(Base):
+  __tablename__ = 'trainings'
+
+  id = Column(Integer, primary_key=True)
+  uuid = Column(String(36))
+  status = Column(Integer)
+  created_at = Column(DateTime)
+  begin_at = Column(DateTime)
+  end_at = Column(DateTime)
+  model_uuid = Column(String(36))
+  model_type = Column(String(255))
+  model_name = Column(String(255))
+  ensemble = Column(Integer)
+  base_models = Column(Text)
+  settings = Column(Text)
+  datasets = Column(Text)
+  metrics = Column(Text)
+
+  def __repr__(self):
+    return f"<Training(uuid='{self.uuid}')>"
 
 class Image(Base):
   __tablename__ = 'images'

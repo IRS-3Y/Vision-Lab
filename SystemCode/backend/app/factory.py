@@ -11,6 +11,7 @@ from .images import save_image, images_dir, get_image_stats, set_image_stat
 from .files import upload_file, upload_file_chunk, files_dir
 from .models import upload_model, delete_model, get_models, update_model
 from .datasets import upload_dataset, delete_dataset, get_datasets, update_dataset
+from .trainings import add_training, delete_training, get_trainings, update_training
 from .classifier import predict_face
 from .generator import generate_image
 from .entities import set_setting, get_settings
@@ -218,6 +219,37 @@ def build_backend():
   @backend.route('/dataset/<uuid>', methods=['DELETE'])
   def dataset_delete(uuid):
     return jsonify(delete_dataset(uuid))
+
+  # get all trainings of type
+  @backend.route('/training/<type>')
+  def trainings_get(type):
+    return jsonify(get_trainings(type))
+
+  # adding training
+  @backend.route('/training', methods=['POST'])
+  def training_add():
+    req = request.get_json()
+    try:
+      type = req['type']
+      name = req['name']
+      ensemble = req['ensemble']
+      base_models = req['base_models']
+      tr_settings = req['settings']
+      tr_datasets = req['datasets']
+      result = add_training(model_type=type, model_name=name, ensemble=ensemble, base_models=base_models, settings=tr_settings, datasets=tr_datasets)
+      return jsonify(result)
+    except KeyError as e:
+      return jsonify({'error': f"missing {e.args[0]}"})
+  
+  # updating training status
+  @backend.route('/training/<uuid>/status/<status>', methods=['PATCH'])
+  def training_update_status(uuid, status):
+    return jsonify(update_training(uuid, status=status))
+  
+  # deleting training
+  @backend.route('/training/<uuid>', methods=['DELETE'])
+  def training_delete(uuid):
+    return jsonify(delete_training(uuid))
 
   return backend
 
