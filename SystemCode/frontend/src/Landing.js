@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import GitHubIcon from '@material-ui/icons/GitHub'
 import SettingsIcon from '@material-ui/icons/Settings'
+import TuneIcon from '@material-ui/icons/Tune'
 import { Card, Typography as Typo } from 'antd'
 
 import background from './assets/img/landing.jpg'
@@ -80,6 +81,13 @@ export default function Landing(){
             <Typography className={classes.white} variant="h6" noWrap>VisionLab</Typography>
           </Link>
           <div className={classes.toolButtonGroup}>
+            <Link to="/trainings">
+              <Tooltip title="Model Trainings">
+                <IconButton>
+                  <TuneIcon className={classes.white}/>
+                </IconButton>
+              </Tooltip>
+            </Link>
             <Link to="/settings">
               <Tooltip title="System Settings">
                 <IconButton>

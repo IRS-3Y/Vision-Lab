@@ -10,6 +10,7 @@ from .context import set_obj
 from .images import save_image, images_dir, get_image_stats, set_image_stat
 from .files import upload_file, upload_file_chunk, files_dir
 from .models import upload_model, delete_model, get_models, update_model
+from .datasets import upload_dataset, delete_dataset, get_datasets, update_dataset
 from .classifier import predict_face
 from .generator import generate_image
 from .entities import set_setting, get_settings
@@ -186,6 +187,37 @@ def build_backend():
   @backend.route('/model/<uuid>', methods=['DELETE'])
   def model_delete(uuid):
     return jsonify(delete_model(uuid))
+  
+  # get all datasets of type
+  @backend.route('/dataset/<type>')
+  def datasets_get(type):
+    return jsonify(get_datasets(type))
+
+  # adding dataset
+  @backend.route('/dataset', methods=['POST'])
+  def dataset_add():
+    req = request.get_json()
+    try:
+      filename = f"{req['file']['uuid']}{req['file']['type']}"
+      filepath = os.path.join(files_dir('upload'), filename)
+
+      type = req['type']
+      name = req['name']
+      label = req['label']
+      result = upload_dataset(type, name, label, filepath)
+      return jsonify(result)
+    except KeyError as e:
+      return jsonify({'error': f"missing {e.args[0]}"})
+  
+  # updating dataset status
+  @backend.route('/dataset/<uuid>/status/<status>', methods=['PATCH'])
+  def dataset_update_status(uuid, status):
+    return jsonify(update_dataset(uuid, status=status))
+  
+  # deleting dataset
+  @backend.route('/dataset/<uuid>', methods=['DELETE'])
+  def dataset_delete(uuid):
+    return jsonify(delete_dataset(uuid))
 
   return backend
 

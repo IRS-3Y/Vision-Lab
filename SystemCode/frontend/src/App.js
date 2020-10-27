@@ -1,30 +1,32 @@
-import React from 'react';
-import clsx from 'clsx';
-import { Switch, Route, Link } from 'react-router-dom';
-import { makeStyles, useTheme, createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from "@material-ui/styles";
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Drawer from '@material-ui/core/Drawer';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import MenuIcon from '@material-ui/icons/Menu';
-import GitHubIcon from '@material-ui/icons/GitHub';
-import SettingsIcon from '@material-ui/icons/Settings';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import MessageSnackbar from './components/core/MessageSnackbar';
-import ChatBot from './components/chatbot/ChatBot';
-import AppService, {messageQueue, getChatContent, setChatContent} from './services/AppService';
-import HomeView from './views/HomeView';
+import React from 'react'
+import clsx from 'clsx'
+import { Switch, Route, Link } from 'react-router-dom'
+import { makeStyles, useTheme, createMuiTheme } from '@material-ui/core/styles'
+import { ThemeProvider } from "@material-ui/styles"
+import CssBaseline from '@material-ui/core/CssBaseline'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Drawer from '@material-ui/core/Drawer'
+import Divider from '@material-ui/core/Divider'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import ButtonGroup from '@material-ui/core/ButtonGroup'
+import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
+import MenuIcon from '@material-ui/icons/Menu'
+import GitHubIcon from '@material-ui/icons/GitHub'
+import SettingsIcon from '@material-ui/icons/Settings'
+import TuneIcon from '@material-ui/icons/Tune'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import ChevronRightIcon from '@material-ui/icons/ChevronRight'
+import MessageSnackbar from './components/core/MessageSnackbar'
+import ChatBot from './components/chatbot/ChatBot'
+import AppService, {messageQueue, getChatContent, setChatContent} from './services/AppService'
+import HomeView from './views/HomeView'
 import SystemSettings from './views/SystemSettings'
-import ImageGenerator from './views/ImageGenerator';
-import ImageDetector from './views/ImageDetector';
+import ModelTrainings from './views/ModelTrainings'
+import ImageGenerator from './views/ImageGenerator'
+import ImageDetector from './views/ImageDetector'
 
 const app = new AppService();
 //check app status
@@ -164,6 +166,13 @@ export default function App({sideMenu = false} = {}) {
             {open? null: logo}
             {open? toolbarMenu: null}
             <div className={classes.toolButtonGroup}>
+              <Link to="/trainings">
+                <Tooltip title="Model Trainings">
+                  <IconButton>
+                    <TuneIcon className={classes.white}/>
+                  </IconButton>
+                </Tooltip>
+              </Link>
               <Link to="/settings">
                 <Tooltip title="System Settings">
                   <IconButton>
@@ -203,6 +212,9 @@ export default function App({sideMenu = false} = {}) {
           <Switch>
             <Route path="/settings">
               <SystemSettings/>
+            </Route>
+            <Route path="/trainings">
+              <ModelTrainings/>
             </Route>
             <Route path="/generator">
               <ImageGenerator/>

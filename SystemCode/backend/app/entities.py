@@ -65,6 +65,19 @@ class Model(Base):
   def __repr__(self):
     return f"<Model(uuid='{self.uuid}')>"
 
+class Dataset(Base):
+  __tablename__ = 'datasets'
+
+  id = Column(Integer, primary_key=True)
+  uuid = Column(String(36))
+  type = Column(String(255))
+  name = Column(String(255))
+  label = Column(String(255))
+  status = Column(Integer)
+
+  def __repr__(self):
+    return f"<Dataset(uuid='{self.uuid}')>"
+
 class Image(Base):
   __tablename__ = 'images'
 
