@@ -19,7 +19,7 @@ export default class TrainingService{
       begin_at: m.begin_at? m.begin_at: '',
       end_at: m.end_at? m.end_at: '',
       ensemble: m.ensemble === 1,
-      base_models: _.split(m.base_models, ',').map(uuid => ({uuid})),
+      base_models: _.split(m.base_models, ','),
       settings: m.settings? JSON.parse(m.settings): {},
       datasets: m.datasets? JSON.parse(m.datasets): {},
       metrics: m.metrics? JSON.parse(m.metrics): {}
@@ -30,7 +30,7 @@ export default class TrainingService{
     let resp = await axios.post(`${this._baseUrl}`, {
       type, name,
       ensemble: ensemble? true: false,
-      base_models: _.join(base_models.map(m => m.uuid), ','),
+      base_models: _.join(base_models, ','),
       settings: JSON.stringify(settings),
       datasets: JSON.stringify(datasets)
     });

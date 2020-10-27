@@ -1,5 +1,9 @@
 const backend = {
   baseUrl: '/backend',
+  training: {
+    defaultBatchSize: 32,
+    defaultMaxEpochs: 10
+  },
   detector: {
     classes: [{
       name: 'human',
