@@ -1,22 +1,8 @@
 import axios from 'axios';
 import config from '../config';
 
-let chatContent = [];
-const getChatContent = () => chatContent;
-const setChatContent = (content) => {
-  if(content){
-    if(typeof content === 'string'){
-      chatContent = [content];
-    }else{
-      chatContent = [...content];
-    }
-  }else{
-    chatContent = [];
-  }
-}
-
 const messageQueue = [];
-export {messageQueue, getChatContent, setChatContent};
+export {messageQueue};
 
 export default class AppService {
   constructor(){

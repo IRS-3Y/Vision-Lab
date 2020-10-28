@@ -36,6 +36,19 @@ $background: #525252;
 
     p {
       margin: 8px 0;
+      font-size: large;
+    }
+
+    .chatbot-actions {
+      margin-top: 16px;
+      margin-bottom: 8px;
+      display: flex;
+      flex-flow: row wrap;
+    }
+
+    .chatbot-actions-title {
+      margin-right: 16px;
+      font-size: medium;
     }
   }
   

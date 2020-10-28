@@ -20,8 +20,7 @@ import TuneIcon from '@material-ui/icons/Tune'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import MessageSnackbar from './components/core/MessageSnackbar'
-import ChatBot from './components/chatbot/ChatBot'
-import AppService, {messageQueue, getChatContent, setChatContent} from './services/AppService'
+import AppService, {messageQueue} from './services/AppService'
 import HomeView from './views/HomeView'
 import SystemSettings from './views/SystemSettings'
 import ModelTrainings from './views/ModelTrainings'
@@ -220,7 +219,7 @@ export default function App({sideMenu = false} = {}) {
               <ImageGenerator/>
             </Route>
             <Route path="/detector">
-              <ImageDetector setResult={setChatContent}/>
+              <ImageDetector/>
             </Route>
             <Route path="/">
               <HomeView/>
@@ -229,11 +228,6 @@ export default function App({sideMenu = false} = {}) {
         </main>
       </div>
       <MessageSnackbar queue={messageQueue}/>
-      <Switch>
-        <Route path="/detector">
-          <ChatBot getContent={getChatContent}/>
-        </Route>
-      </Switch>
     </ThemeProvider>
   );
 }

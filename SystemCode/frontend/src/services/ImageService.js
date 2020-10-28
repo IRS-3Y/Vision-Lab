@@ -93,6 +93,11 @@ export default class ImageService {
     return resp.data;
   }
 
+  label = async ({image, class_label}) => {
+    let resp = await axios.post(`${this._baseUrl}/label`, {image, class_label});
+    return resp.data;
+  }
+
   postStats = async ({image, model:{name,version}, stats = []}) => {
     let resp = await axios.post(`${this._baseUrl}/stats`, {image, model: {name, version}, stats});
     return resp.data;

@@ -107,6 +107,7 @@ class Image(Base):
   image_type = Column(String(10))
   model_name = Column(String(255))
   model_version = Column(String(255))
+  class_label = Column(String(255)) 
   likes = Column(Integer)
   downloads = Column(Integer)
 

@@ -7,7 +7,7 @@ from flask_cors import CORS
 import tensorflow as tf
 
 from .context import set_obj
-from .images import save_image, images_dir, get_image_stats, set_image_stat
+from .images import save_image, images_dir, get_image_stats, set_image_stat, set_image_label
 from .files import upload_file, upload_file_chunk, files_dir
 from .models import upload_model, delete_model, get_models, update_model
 from .datasets import upload_dataset, delete_dataset, get_datasets, update_dataset
@@ -116,6 +116,17 @@ def build_backend():
       mdl_version = req['model']['version']
       result = generate_image(mdl_name, mdl_version)
       return jsonify(result)
+  
+  # label image
+  @backend.route('/image/label', methods=['POST'])
+  def image_label_post():
+    req = request.get_json()
+    try:
+      image = req['image']
+      set_image_label(image['uuid'], image['type'], req['class_label'])
+      return jsonify({})
+    except KeyError as e:
+      return jsonify({'error': f"missing {e.args[0]}"})
 
   # query image statistics
   @backend.route('/image/stats')

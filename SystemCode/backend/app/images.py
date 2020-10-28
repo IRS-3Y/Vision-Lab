@@ -63,6 +63,16 @@ def plot_image(image_uuid, image_type = '.jpg', image_dir = 'origin'):
   plt.show()
 
 
+def set_image_label(image_uuid, image_type, class_label):
+  with session_scope() as session:
+    image = session.query(Image).filter_by(uuid=image_uuid).first()
+    if image is None:
+      image = Image(uuid=image_uuid, image_type=image_type, class_label=class_label, likes=0, downloads=0)
+      session.add(image)
+    else:
+      image.class_label = class_label
+
+
 def set_image_stat(image_uuid, image_type, model_name, model_version, stat_name, stat_delta = 1):
   with session_scope() as session:
     image = session.query(Image).filter_by(uuid=image_uuid).first()
