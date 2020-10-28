@@ -1,6 +1,9 @@
 import _ from 'lodash'
 import axios from 'axios'
 import config from '../config'
+import AppService from './AppService'
+
+const app = new AppService();
 
 export default class TrainingService{
   constructor(){
@@ -12,13 +15,14 @@ export default class TrainingService{
     if(!resp.data.length){
       return resp.data;
     }
+    let now = await app.now();
     return resp.data.map(m => ({
       ...m,
       type: m.model_type,
       name: m.model_name,
       begin_at: m.begin_at? m.begin_at: '',
       end_at: m.end_at? m.end_at: '',
-      duration: m.begin_at? (Date.parse(m.end_at? m.end_at: new Date().toLocaleString()) - Date.parse(m.begin_at)): undefined,
+      duration: m.begin_at? ((m.end_at? Date.parse(m.end_at): now) - Date.parse(m.begin_at)): undefined,
       ensemble: m.ensemble === 1,
       base_models: _.split(m.base_models, ','),
       settings: m.settings? JSON.parse(m.settings): {},

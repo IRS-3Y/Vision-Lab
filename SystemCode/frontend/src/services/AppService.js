@@ -14,6 +14,11 @@ export default class AppService {
     return resp.data;
   }
 
+  now = async () => {
+    let status = await this.getStatus();
+    return Date.parse(status.now);
+  }
+
   getSettings = async () => {
     let resp = await axios.get(`${this._baseUrl}/settings`);
     return resp.data;

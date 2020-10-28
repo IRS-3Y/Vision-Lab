@@ -2,6 +2,7 @@
 Application factory methods
 '''
 import os
+from datetime import datetime
 from flask import Flask, Blueprint, jsonify, request, send_from_directory
 from flask_cors import CORS
 import tensorflow as tf
@@ -48,7 +49,8 @@ def build_backend():
       'tensorflow': {
         'version': tf.__version__,
         'gpu': tf.config.list_physical_devices('GPU') if tf.__version__.startswith('2.') else tf.test.gpu_device_name()
-      }
+      },
+      'now': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     })
 
   # get system settings
