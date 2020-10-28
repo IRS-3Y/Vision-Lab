@@ -18,11 +18,15 @@ def build_model(base_models, classes = 2):
 
   # connect all base models to the same input (resizing if shape differs)
   bases = []
+  count = 0
   for bm in base_models:
+    bm._name = f"bm{count}_{bm.name}"
     bm.trainable = False
+    
     [height, width] = bm.input.shape[1:3]
     x = inputs if height == IMAGE_SIZE else Resizing(height=height,width=width)(inputs)
     bases.append(bm(x))
+    count += 1
   
   # concatenate all base model outputs and apply additional dense layers
   merge = concatenate(bases)

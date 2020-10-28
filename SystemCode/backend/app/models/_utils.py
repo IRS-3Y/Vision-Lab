@@ -34,19 +34,23 @@ def model_path(model_name, model_version = 'default', file_ext = '.h5'):
   return os.path.join(models_dir(model_name), filename)
 
 
-def load_model(model_name, model_version = 'default'):
+def load_model(model_name, model_version = 'default', use_cache = True):
   '''
   Load previously trained model
   '''
-  cache_key = f"{model_name}__{model_version}"
-  try:
-    model = _model_cache[cache_key]
-  except KeyError:
+  if use_cache:
+    cache_key = f"{model_name}__{model_version}"
+    try:
+      model = _model_cache[cache_key]
+    except KeyError:
+      path = model_path(model_name, model_version)
+      model = tf.keras.models.load_model(path)
+      _model_cache[cache_key] = model
+    return model
+  else:
+    # load without cache
     path = model_path(model_name, model_version)
-    model = tf.keras.models.load_model(path)
-    _model_cache[cache_key] = model
-
-  return model
+    return tf.keras.models.load_model(path)
 
 
 def build_model_checkpoint(model_name, model_version = 'default'):

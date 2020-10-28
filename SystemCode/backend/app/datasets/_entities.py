@@ -6,6 +6,15 @@ from ..entities import session_scope, Dataset
 from ._utils import dataset_dir
 
 
+def get_dataset(uuid):
+  with session_scope() as session:
+    dataset = session.query(Dataset).filter_by(uuid=uuid).first()
+    if dataset is not None:
+      return (dataset.uuid, dataset.name)
+    else:
+      return (None, None)
+
+
 def get_datasets(type):
   with session_scope() as session:
     datasets = session.query(Dataset).filter_by(type=type).order_by(Dataset.name).all()

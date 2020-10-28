@@ -1,8 +1,11 @@
 '''
 Backend Flask App
 '''
+import logging
 from importlib import import_module
 from app import factory, entities, utils
+
+logging.basicConfig(level=logging.DEBUG)
 
 app = factory.build()
 

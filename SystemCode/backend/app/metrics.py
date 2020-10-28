@@ -1,9 +1,9 @@
+from importlib import import_module
 import numpy as np
-import sklearn.metrics as metrics
-import matplotlib.pyplot as plt
 
 
 def show_image(image):
+  plt = import_module('matplotlib.pyplot')
   plt.imshow(image / 255, cmap = 'gray')
 
 
@@ -35,6 +35,8 @@ def dataset_to_numpy(dataset, limit = None):
 
 
 def report(true_out, pred_out, class_names):
+  metrics = import_module('sklearn.metrics')
+
   pred = np.argmax(pred_out, axis=1)
   test = np.argmax(true_out, axis=1)
 
@@ -43,3 +45,5 @@ def report(true_out, pred_out, class_names):
 
   print("Accuracy: %.2f%%" % (acc_score*100))
   print(cls_report)
+
+  return {"acc_score": acc_score, "cls_report": cls_report}

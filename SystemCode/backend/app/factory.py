@@ -11,7 +11,7 @@ from .images import save_image, images_dir, get_image_stats, set_image_stat
 from .files import upload_file, upload_file_chunk, files_dir
 from .models import upload_model, delete_model, get_models, update_model
 from .datasets import upload_dataset, delete_dataset, get_datasets, update_dataset
-from .trainings import add_training, delete_training, get_trainings, update_training
+from .trainings import add_training, delete_training, get_trainings, update_training, process_training
 from .classifier import predict_face
 from .generator import generate_image
 from .entities import set_setting, get_settings
@@ -250,6 +250,11 @@ def build_backend():
   @backend.route('/training/<uuid>', methods=['DELETE'])
   def training_delete(uuid):
     return jsonify(delete_training(uuid))
+
+  # process training queue
+  @backend.route('/training/process', methods=['POST'])
+  def training_process():
+    return jsonify(process_training())
 
   return backend
 

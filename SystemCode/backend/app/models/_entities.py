@@ -5,6 +5,15 @@ from ..entities import session_scope, Model
 from ._utils import model_path, new_model_version
 
 
+def get_model(uuid):
+  with session_scope() as session:
+    model = session.query(Model).filter_by(uuid=uuid).first()
+    if model is not None:
+      return (model.uuid, model.name, model.version)
+    else:
+      return (None, None, None)
+
+
 def get_models(type):
   with session_scope() as session:
     models = session.query(Model).filter_by(type=type).order_by(Model.name, Model.version).all()
