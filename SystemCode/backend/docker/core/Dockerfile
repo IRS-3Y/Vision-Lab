@@ -1,5 +1,8 @@
 FROM vlab-backend-base:dev
 
+# install extra dependencies
+RUN pip install scikit-learn
+
 # copy preloaded models
 COPY instance ${BASEDIR}/instance
 
