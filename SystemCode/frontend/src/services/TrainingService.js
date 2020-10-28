@@ -18,6 +18,7 @@ export default class TrainingService{
       name: m.model_name,
       begin_at: m.begin_at? m.begin_at: '',
       end_at: m.end_at? m.end_at: '',
+      duration: m.begin_at? (Date.parse(m.end_at? m.end_at: new Date().toLocaleString()) - Date.parse(m.begin_at)): undefined,
       ensemble: m.ensemble === 1,
       base_models: _.split(m.base_models, ','),
       settings: m.settings? JSON.parse(m.settings): {},
@@ -26,7 +27,7 @@ export default class TrainingService{
     }));
   }
 
-  create = async ({type, name, ensemble, base_models = [], settings = {}, datasets = {}}) => {
+  create = async ({type, name, ensemble, base_models = [], settings = {}, datasets = {}}, process) => {
     let resp = await axios.post(`${this._baseUrl}`, {
       type, name,
       ensemble: ensemble? true: false,
@@ -34,6 +35,9 @@ export default class TrainingService{
       settings: JSON.stringify(settings),
       datasets: JSON.stringify(datasets)
     });
+    if(process){
+      await this.triggerProcess();
+    }
     return resp.data;
   }
 
@@ -44,6 +48,11 @@ export default class TrainingService{
 
   delete = async (uuid) => {
     let resp = await axios.delete(`${this._baseUrl}/${uuid}`);
+    return resp.data;
+  }
+
+  triggerProcess = async () => {
+    let resp = await axios.post(`${this._baseUrl}/process`, {});
     return resp.data;
   }
 }

@@ -1,7 +1,9 @@
 import React from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { makeStyles } from '@material-ui/core'
-import { Table, Button, Modal, Space, Typography, Select, Switch, Slider, Transfer} from 'antd'
+import { Table, Button, Modal, Space, Typography, Select, Switch, Slider, Transfer, Tag} from 'antd'
+import { SyncOutlined } from '@ant-design/icons'
+import humanizeDuration from 'humanize-duration'
 import TrainingService from '../services/TrainingService'
 import DatasetService from '../services/DatasetService'
 import ModelService from '../services/ModelService'
@@ -44,6 +46,26 @@ const useStyles = makeStyles(theme => ({
   transfer: {
     width: '100%',
     marginBottom: theme.spacing(1)
+  },
+  clickable: {
+    '&:hover': {
+      cursor: 'pointer'
+    }
+  },
+  sync: {
+    verticalAlign: 'middle',
+    marginLeft: theme.spacing(2),
+    '&:hover': {
+      cursor: 'pointer'
+    },
+    "& svg": {
+      width: 24,
+      height: 24,
+      color: 'rgb(24,144,255)'
+    },
+    "& svg:hover": {
+      color: 'rgb(74,168,255)'
+    }
   }
 }))
 
@@ -92,10 +114,24 @@ export default function TrainingsManager({modelType}){
   let saveTraining = async () => {
     let {name, ensemble, base_models, settings, datasets} = training;
     if(name && settings && datasets && datasets.uuid){
-      await service.create({type: modelType, name, ensemble, base_models, settings, datasets});
+      await service.create({type: modelType, name, ensemble, base_models, settings, datasets}, true);
       await refresh();
     }
     setTraining({visible: false, key: uuidv4()});
+  }
+
+  const pause = async ({uuid}) => {
+    await service.updateStatus(uuid, -1);
+    refresh();
+  }
+  const resume = async ({uuid}) => {
+    await service.updateStatus(uuid, 0);
+    refresh();
+  }
+
+  const handleSync = async () => {
+    await service.triggerProcess();
+    refresh();
   }
 
   const sorter = prop => (a, b) => a[prop].localeCompare(b[prop]);
@@ -114,13 +150,30 @@ export default function TrainingsManager({modelType}){
     dataIndex: 'begin_at',
     sorter: sorter('begin_at')
   },{
-    title: 'End Time',
-    dataIndex: 'end_at',
-    sorter: sorter('end_at')
+    title: 'Duration',
+    dataIndex: 'duration',
+    sorter: ({duration: a = 0}, {duration: b = 0}) => a-b,
+    render: duration => duration? humanizeDuration(duration): ""
+  },{
+    title: 'Accuracy',
+    dataIndex: 'metrics',
+    sorter: ({metrics: {acc_score: a = 0}}, {metrics: {acc_score: b = 0}}) => a-b,
+    render: ({acc_score: acc}) => acc? (100 * acc).toFixed(2) + "%": "",
+    align: 'right'
   },{
     title: 'Status',
     dataIndex: 'status',
-    sorter: (a, b) => a.status - b.status
+    sorter: (a, b) => a.status - b.status,
+    render: (status, trn) => {
+      switch (status){
+        case -1: return <Tag color="orange" className={classes.clickable} onClick={()=>resume(trn)}>paused</Tag>;
+        case 0: return <Tag className={classes.clickable} onClick={()=>pause(trn)}>pending</Tag>;
+        case 1: return <Tag color="blue">running</Tag>;
+        case 2: return <Tag color="green">success</Tag>;
+        case 3: return <Tag color="red">failure</Tag>;
+        default: return null;
+      }
+    }
   }];
 
   return (
@@ -138,6 +191,7 @@ export default function TrainingsManager({modelType}){
             datasets: {}
           }));
         }}>Add Training</Button>
+        <SyncOutlined className={classes.sync} onClick={handleSync}/>
       </div>
       <Modal width={720}
         title="Add Training"
@@ -184,12 +238,12 @@ export default function TrainingsManager({modelType}){
           ): null}
           <Typography.Text className={classes.text}>Batch Size</Typography.Text>
           <Slider className={classes.slider} key={`${training.key}-batch-size`} 
-            min={0} max={200} defaultValue={config.backend.training.defaultBatchSize}
+            min={1} max={200} defaultValue={config.backend.training.defaultBatchSize}
             onAfterChange={changeTraining('settings', 'batch_size')}
           />
           <Typography.Text className={classes.text}>Maximum Epochs</Typography.Text>
           <Slider className={classes.slider} key={`${training.key}-max-epochs`} 
-            min={0} max={100} defaultValue={config.backend.training.defaultMaxEpochs}
+            min={1} max={100} defaultValue={config.backend.training.defaultMaxEpochs}
             onAfterChange={changeTraining('settings', 'max_epochs')}
           />
         </Space>
