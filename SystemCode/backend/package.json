@@ -24,7 +24,7 @@
     "copy:docker-stylegan": "copyfiles -f \"./docker/stylegan/*\" ./target",
     "copy:docker-dcgan": "copyfiles -f \"./docker/dcgan/*\" ./target",
     "docker:base": "docker run --rm -it -p 5000:5000 vlab-backend-base:dev",
-    "start": "cross-env FLASK_APP=backend flask run --port=5001"
+    "start": "cross-env FLASK_APP=backend flask run --host=0.0.0.0 --port=5001"
   },
   "devDependencies": {
     "copyfiles": "^2.2.0",
