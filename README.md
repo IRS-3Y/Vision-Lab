@@ -1,9 +1,9 @@
-﻿### Vision Lab
+﻿### VisionLab
 
 ---
 
 ## SECTION 1 : PROJECT TITLE
-## Vision Lab
+## VisionLab
 
 ---
 
