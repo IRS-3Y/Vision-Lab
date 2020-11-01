@@ -1,9 +1,9 @@
-﻿### Vision Lab
+﻿### VisionLab
 
 ---
 
 ## SECTION 1 : PROJECT TITLE
-## Vision Lab
+## VisionLab
 
 ---
 
@@ -35,7 +35,7 @@ TODO
 - Make sure [docker & docker-compose](https://docs.docker.com/install/) has been installed on local system.
 - Install [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) (to enable GPU support for application running in Docker).
 - Download [vlab-compose.yml](https://github.com/IRS-3Y/Vision-Lab/blob/master/SystemCode/vlab-compose.yml) to a local directory.
-- Open a command shell, goto the local directory where vlab-compose.yml has been downloaded, and execute below command:
+- Open a command shell, go to the local directory where vlab-compose.yml has been downloaded, and execute below command:
 ```
 docker-compose -p vlab -f vlab-compose.yml up -d
 ```
@@ -47,7 +47,7 @@ docker-compose -p vlab -f vlab-compose.yml down -v
 ```
 
 ### Installation on Windows
-Follow the same steps as above except that, for Windows, use a different Docker Compose file [vlab-compose-windows.xml](https://github.com/IRS-3Y/Vision-Lab/blob/master/SystemCode/vlab-compose-windows.yml).
+Follow the same steps as above except that, for Windows, use a different Docker Compose file [vlab-compose-windows.yml](https://github.com/IRS-3Y/Vision-Lab/blob/master/SystemCode/vlab-compose-windows.yml).
 
 NVIDIA Container Toolkit is not available for Windows machine. Without NVIDIA GPU support in Docker, certain features (e.g. StyleGAN models and training pipelines) will be disabled in the deployed application, while other parts of the application can still perform normally.
 
