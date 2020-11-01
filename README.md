@@ -32,7 +32,11 @@ If you want to learn more about the system VisionLab, please access to our GitHu
 ---
 
 ## SECTION 4 : VIDEO OF SYSTEM MODELLING & USE CASE DEMO
-TODO
+<div align="center">
+  <a href="https://youtu.be/0S9A_LIQk74">
+    <img src="https://img.youtube.com/vi/0S9A_LIQk74/0.jpg" alt="VisionLab Project Video">
+  </a>
+</div>
 
 ---
 
