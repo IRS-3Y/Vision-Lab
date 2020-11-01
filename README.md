@@ -16,6 +16,7 @@ On the other hand, many kinds of supervised learning with Deep CNN algorithms ha
 While interact with VisionLab system, users can revise system settings flexibly to change the no. of generated images per batch (range of values 0-20), single or mixed model types for generating fake faces and detecting uploaded photos. On Image Generator page, users are allowed to get more virtual faces via click “+” button, mark and download any favorite faces. When a photo is uploaded in Image Generator page, a cute robot responds to users whether that photo is real or fake, and now users are allowed to choose correct categorization through click “Agree” and “Disagree” buttons. 
 
 Furthermore, our system not only provides face detection and generation, but also offers more valuable features, such as the ability to upload new weight files if users train their own dataset with our proposed models, and users are also able to train detector models online as we have formed a model auto-training pipeline in our system.
+
 If you want to learn more about the system VisionLab, please access to our GitHub link via clicking the project Site icon on system home page. 
 
 ---
