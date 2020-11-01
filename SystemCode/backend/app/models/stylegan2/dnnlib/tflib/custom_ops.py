@@ -24,9 +24,19 @@ cuda_cache_version_tag = 'v1'
 do_not_hash_included_headers = False # Speed up compilation by assuming that headers included by the CUDA code never change. Unsafe!
 verbose = True # Print status messages to stdout.
 
+def _compiler_search_path(base_dir):
+    try:
+        for sub in os.listdir(base_dir):
+            path = f"{base_dir}/{sub}/bin/Hostx64/x64"
+            if os.path.isdir(path):
+                return path
+    except:
+        pass
+    return 'C:/EmptyFolder'
+
 compiler_bindir_search_path = [
-    'C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.16.27023/bin/Hostx64/x64',
-    'C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.26.28801/bin/Hostx64/x64',
+    _compiler_search_path('C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC'),
+    _compiler_search_path('C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC'),
     'C:/Program Files (x86)/Microsoft Visual Studio 14.0/vc/bin',
 ]
 
